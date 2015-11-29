@@ -1,0 +1,7 @@
+dist
+dev
+node_modules
+bower_components
+.DS_Store
+*.sublime-workspace
+*.sublime-project
