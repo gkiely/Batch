@@ -159,30 +159,61 @@ let Batch = (function(win, doc, body){
 
 
 
-
-
-window.addEventListener('error', function(e){
-  Batch.windowError(e);
-});
-
-
-function init(){
-  Batch.error('asdf');
-  Batch.warn('yolo');
-  Batch.log('logmeup');
-  console.log('testlog');
-  console.warn('testwarn');
-  console.error('testerror');
-  var req = new XMLHttpRequest();
-  req.open("GET", "any.html", true);
-  req.send(null);
+/**
+ * Testing
+ */
+function gup(name) {
+  var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+  if(match){
+      var result = decodeURIComponent(match[1].replace(/\+/g, ' ')).toLowerCase();
+      return result === "true" || result === "false" ? /^true$/i.test(result) : result;
+  }
 }
 
-function causeError(){
-  testRuntimeError;
+
+if(gup('ajax')){
+  $.ajax({
+      type: 'POST',
+      url: '//localhost:8001',
+      crossDomain: true,
+      data: {"sup":"bro"},
+      // contentType: 'application/json',
+      dataType: 'json',
+      success: function(res, text, jqXHR) {
+          console.log('success', res);
+      },
+      error: function (res, text, errorThrown) {
+        console.log(errorThrown);
+          console.log('POST failed');
+      }
+  });
 }
 
-init();
-causeError();
+if(gup('test')){
+  window.addEventListener('error', function(e){
+    Batch.windowError(e);
+  });
+
+
+  function init(){
+    Batch.error('asdf');
+    Batch.warn('yolo');
+    Batch.log('logmeup');
+    console.log('testlog');
+    console.warn('testwarn');
+    console.error('testerror');
+    var req = new XMLHttpRequest();
+    req.open("GET", "any.html", true);
+    req.send(null);
+  }
+
+  function causeError(){
+    testRuntimeError;
+  }
+
+  init();
+  causeError();
+
+}
 
 

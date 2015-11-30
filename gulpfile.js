@@ -39,7 +39,7 @@ var path = {
   fonts: dir.src + 'sass/fonts/*',
   img: [dir.src + 'img/*'],
   viewHtml: [dir.src + 'html/partials/*.html'],
-  js: ['index.js', dir.src + 'js/app/util.js', dir.src + 'js/app/*.js'],
+  js: [dir.src + 'js/app/util.js', dir.src + 'js/app/*.js'],
   jsTesting: [dir.src + 'js/testing/*.js'],
   jsTestingLib: [dir.src + 'js/testing/vendor/*.js'],
   jslib: [dir.src + 'js/lib/jquery.min.js', dir.src + 'js/lib/angular.js', dir.src + 'js/lib/*.js'],
