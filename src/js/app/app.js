@@ -11,8 +11,9 @@ if(window.console){
   };
 
   console.log = function(){
-    log.apply(this, Array.prototype.slice.call(arguments));
-    Batch._track(arguments[0], 'clog');
+    var arr = Array.prototype.slice.call(arguments);
+    log.apply(this, arr);
+    Batch._track(JSON.stringify(arr), 'clog');
   };
   console.warn = function(){
     warn.apply(this, Array.prototype.slice.call(arguments));
@@ -172,22 +173,31 @@ function gup(name) {
 
 
 if(gup('ajax')){
+
   $.ajax({
       type: 'POST',
-      url: '//localhost:8001',
-      crossDomain: true,
+      url: '//10.1.1.8:8001/',
       data: {"sup":"bro"},
       // contentType: 'application/json',
+      crossdomain: true,
       dataType: 'json',
       success: function(res, text, jqXHR) {
           console.log('success', res);
       },
       error: function (res, text, errorThrown) {
-        console.log(errorThrown);
-          console.log('POST failed');
+        // console.log(errorThrown);
+        console.log(res);
+        // console.log('POST failed');
       }
   });
 }
+
+if(gup('geo')){
+  $.getJSON("http://freegeoip.net/json/", function(data) {
+    console.log(data);
+  });
+}
+
 
 if(gup('test')){
   window.addEventListener('error', function(e){
