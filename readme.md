@@ -1,6 +1,6 @@
 BatchJS
 =================
-Fast, simple, javascript error tracker that runs on node.js
+Fast, simple, JavaScript error tracker that runs on node.
 
 
 
