@@ -1,7 +1,15 @@
 // Create/use db
 // use mydb
 
-// Insert
+// Create Collection
+// db.createCollection('myCollection', {
+//   capped: [optionalBool],
+//   autoIndexID: [optionalBool],
+//   size: [optionalNumber],
+//   max: [optionalNumber]
+// });
+
+// Insert & Create collection
 // db.players.insert({yo: "sup"})
 // db.players.insert([{obj1: "yo"}, {obj2: "sup"}])
 
@@ -35,7 +43,6 @@
 
 // Remove collection
 // db.players.drop()
-
 
 
 // show collections
@@ -115,6 +122,9 @@
 // db.users.find({
 //   "age": {$lt:23}
 // }).pretty()
+
+
+// db.users.find().pretty()
 
 
 // Grouping data

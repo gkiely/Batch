@@ -152,10 +152,12 @@ gulp.task('sassLib', function(){
 =            Server            =
 ==============================*/
 gulp.task('server', function(){
+  var ip = require('get-my-ip')();
+  
   gulp.src(dir.dist)
   .pipe(webserver())
   .pipe(webserver({
-    host: '10.1.1.8',
+    host: ip,
     livereload: true
   }))
 });
@@ -165,6 +167,10 @@ gulp.task('server-reload', function(){
     livereload: true
   }))
 });
+
+
+
+
 gulp.task('server-external', function(){
   gulp.src(dir.dist)
   .pipe(webserver())
