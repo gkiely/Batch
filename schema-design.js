@@ -13,7 +13,7 @@
   ]
 }
 
-/**
+/*
  * One to Many
  * Use: Referencing
  */
@@ -44,3 +44,31 @@ product = db.products.find({
 db.parts.find({
   _id: {$in: product.parts}
 }).toArray();
+
+
+/**
+ * Two-way referencing
+ * You want to see what tasks a person has
+ * But you also who is responsible for a specific task
+ * Pros: quick and easy to find refs, can still access linked data without join
+ * Cons: Reassigning data means two updates..
+ * ...The reference from person -> task and task -> person
+ */
+
+{
+  _id: ObjectID('PID1'),
+  name: "Grant Kiely",
+  tasks: [
+    ObjectID("AD10"),
+    ObjectID("AD11"),
+    ObjectID("AD12")
+  ]
+}
+
+{
+  _id: ObjectID('AD10'),
+  desc: "Write lesson plan",
+  due_date: ISODate('2014-04-01'),
+  owner: ObjectID('PID1')
+}
+

@@ -59,6 +59,15 @@ app.post('/', function(req, res){
 });
 
 
+app.post('/save', function(){
+  
+});
+
+app.get('/get', function(){
+  
+});
+
+
 
 app.listen(port);
 console.log('Server started, listening on localhost:' + port);

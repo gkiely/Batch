@@ -176,18 +176,16 @@ if(gup('ajax')){
 
   $.ajax({
       type: 'POST',
-      url: '//10.1.1.8:8001/',
+      url: '//localhost:8001/api',
       data: {"sup":"bro"},
-      // contentType: 'application/json',
-      crossdomain: true,
       dataType: 'json',
       success: function(res, text, jqXHR) {
-          console.log('success', res);
+          console.log(res);
       },
       error: function (res, text, errorThrown) {
         // console.log(errorThrown);
+        console.log('POST failed');
         console.log(res);
-        // console.log('POST failed');
       }
   });
 }
@@ -198,6 +196,11 @@ if(gup('geo')){
   });
 }
 
+if(gup('mongo')){
+  $.getJSON('//localhost:8001/people', function(data){
+    console.log(data);
+  });
+}
 
 if(gup('test')){
   window.addEventListener('error', function(e){
