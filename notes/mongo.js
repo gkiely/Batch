@@ -1,7 +1,17 @@
-// Create/use db
-// use mydb
+// === Show databases
+// show dbs
 
-// Create Collection
+
+// === Show collections
+// show collections
+
+
+
+/**
+ * Create
+ */
+
+// === Create Collection
 // db.createCollection('myCollection', {
 //   capped: [optionalBool],
 //   autoIndexID: [optionalBool],
@@ -9,60 +19,70 @@
 //   max: [optionalNumber]
 // });
 
-// Insert & Create collection
+// === Insert / Create collection
 // db.players.insert({yo: "sup"})
 // db.players.insert([{obj1: "yo"}, {obj2: "sup"}])
 
-// Remove
+
+// === Create/use db
+// use mydb
+
+
+/**
+ * Remove
+ */
+
+// === Remove Object
 // db.players.remove(
 //   {"_id" : ObjectId("567696c33f5b505c44b65706")}
 // )
 
-// Update entire object
+// === Remove collection
+// db.players.drop()
+
+
+/**
+ * Update
+ */
+
+// === Update entire object
 // db.players.update(
 //   {"_id" : ObjectId("567696df025dad0ef37b30d8")},
 //   {
-//     "position" : "Left Wing",
-//     "id" : 8475761,
-//     "weight" : 195,
-//     "height" : "6' 2\"",
-//     "imageUrl" : "http://1.cdn.nhle.com/photos/mugs/8475761.jpg",
-//     "birthplace" : "Gardena, CA, USA",
-//     "age" : 23,
-//     "name" : "Bob Bennett",
-//     "birthdate" : "November 27, 1991",
-//     "number" : 19
+//     "fname" : "Grant",
+//     "lname" : "Kiely",
 //   }
 // )
 
-// Update one property
+// === Update one property
 // db.players.update(
 //   {"_id": ObjectId("567696df025dad0ef37b30d8")},
 //   {$set: {position: "yolo"}}
 // )
 
-// Remove collection
-// db.players.drop()
 
 
-// show collections
 
-// Find
+/**
+ * Read
+ */
+
+// === Find
 // db.players.find()
 // db.players.find().pretty()
 // db.players.findOne()
-
 // db.players.find({
 //   position: 'Goalie'
 // }).pretty()
 
-// And find
+
+// === 'AND' find
 // db.players.find({
 //   age: 21,
 //   position: 'Defenseman'
 // }).pretty()
 
-// Or find
+// === 'OR' find
 // db.players.find({
 //   $or: [
 //     {
@@ -72,7 +92,7 @@
 //   ]
 // }).pretty()
 
-// Greater than find
+// === Greater than find
 // db.players.find({
 //   "age": {$gt:30}
 // }).pretty()
@@ -81,7 +101,7 @@
 // $gt, $lt, $gte, $lte, $ne (not equal)
 
 
-// Filter data returned
+// === Filter data returned
 // db.players.find(
 //   {position: 'Center'},
 //   {
@@ -90,15 +110,34 @@
 //   }
 // ).pretty()
 
-//Limit
+// === Limit
 // db.players.find({
 //   position: 'Center'
 // }).limit(3).pretty()
 
-// Skip
+// === Skip
 // db.players.find({
 //   position: 'Center'
 // }).skip(2).pretty()
+
+// === Grouping data
+// $avg, $sum, $max, $min
+// db.users.aggregate({
+//   $group: {
+//     _id: "$eyeColor",
+//     avgAge: {$avg: "$age"},
+//     richest: {$max: "$balance"},
+//     total: {$sum : 1}
+//   }
+// })
+
+
+
+
+
+
+
+
 
 // Performance
 // totalDocsExamined shows amount searched
@@ -119,23 +158,8 @@
 
 
 
-// db.users.find({
-//   "age": {$lt:23}
-// }).pretty()
 
 
-// db.users.find().pretty()
 
-
-// Grouping data
-// $avg, $sum, $max, $min
-// db.users.aggregate({
-//   $group: {
-//     _id: "$eyeColor",
-//     avgAge: {$avg: "$age"},
-//     richest: {$max: "$balance"},
-//     total: {$sum : 1}
-//   }
-// })
 
 
