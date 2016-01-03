@@ -176,8 +176,11 @@ if(gup('ajax')){
 
   $.ajax({
       type: 'POST',
-      url: '//localhost:8001/api',
-      data: {"sup":"bro"},
+      url: '//localhost:8001/api/createError',
+      data: {
+        "name": "bro",
+        "msg" : "yolo"
+      },
       dataType: 'json',
       success: function(res, text, jqXHR) {
           console.log(res);

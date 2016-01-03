@@ -1,14 +1,14 @@
 /**
  * Modules
  */
-var http        = require('http');
-var path        = require('path');
+var http       = require('http');
 var path       = require('path');
-var dateTime    = new require('date-time');
+var path       = require('path');
+var dateTime   = new require('date-time');
 var cors       = require('cors');
-var bodyParser  = require('body-parser');
-var express     = require('express');
-var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
+var express    = require('express');
+var mongoose   = require('mongoose');
 
 
 /**
@@ -60,7 +60,9 @@ app.use(bodyParser.urlencoded({
  */
 mongoose.connect('mongodb://localhost/test');
 
-var logSchema = new Schema({
+
+
+var errorLogSchema = new Schema({
   name: String,
   msg: String,
   date: Date
@@ -68,23 +70,30 @@ var logSchema = new Schema({
 
 
 
-var Logs = mongoose.model('Log', logSchema, 'logs');
-
+var ErrorLog = mongoose.model('ErrorLog', errorLogSchema);
 
 
 /**
  * Routes/api
  */
-app.post('/api/save', function(req, res){
+app.post('/api/createError', function(req, res){
+  
+  req.body.date =  new Date();
+  console.log(req.body);
+  var elog = new ErrorLog(req.body);
 
-  Logs.insert(req.body, function(err, doc){
-      
+  elog.save(req.body, function(err, doc){
+    if(err) throw err;
+
+    console.log('user save successfully');
+    res.json({status: 'saved'});
+    res.end();
   });
 });
 
 
 app.post('/api/find', function(req, res){
-  Logs.find(function(err, doc){
+  ErrorLogs.find(function(err, doc){
     if(err) throw err;
   });
 });
