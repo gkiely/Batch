@@ -1,3 +1,4 @@
-show collections
+// show collections
 // db.grant.drop()
-// db.errorLogs.find()
+db.errorlogs.find()
+// db.errorlogs.remove({})

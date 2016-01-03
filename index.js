@@ -40,6 +40,10 @@ function getUserData(req){
   }
 }
 
+function successCallback(res){
+  res.json({status: 'success'});
+  res.end('success');
+}
 
 
 
@@ -65,7 +69,7 @@ mongoose.connect('mongodb://localhost/test');
 var errorLogSchema = new Schema({
   name: String,
   msg: String,
-  date: Date
+  date: {type: Date, default: Date.now}
 });
 
 
@@ -76,29 +80,45 @@ var ErrorLog = mongoose.model('ErrorLog', errorLogSchema);
 /**
  * Routes/api
  */
-app.post('/api/createError', function(req, res){
-  
-  req.body.date =  new Date();
-  console.log(req.body);
+app.post('/api/create', function(req, res){
+  // console.log(req.body);
   var elog = new ErrorLog(req.body);
 
   elog.save(req.body, function(err, doc){
     if(err) throw err;
 
     console.log('user save successfully');
-    res.json({status: 'saved'});
-    res.end();
+    console.log(doc);
+    successCallback(res);
   });
 });
 
 
-app.post('/api/find', function(req, res){
-  ErrorLogs.find(function(err, doc){
+app.post('/api/read', function(req, res){
+  elog.find(function(err, doc){
     if(err) throw err;
+
+    successCallback(res);
+  });
+});
+
+app.post('/api/update', function(req, res){
+  elog.find(function(err, doc){
+    if(err) throw err;
+
+    successCallback(res);
   });
 });
 
 
+app.post('/api/delete', function(req, res){
+  
+  ErrorLog.remove({}, function(err, doc){
+    if(err) throw err;
+
+    successCallback(res);
+  });
+})
 
 
 

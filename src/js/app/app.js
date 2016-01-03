@@ -176,7 +176,7 @@ if(gup('ajax')){
 
   $.ajax({
       type: 'POST',
-      url: '//localhost:8001/api/createError',
+      url: '//localhost:8001/api/create',
       data: {
         "name": "bro",
         "msg" : "yolo"
@@ -192,6 +192,22 @@ if(gup('ajax')){
       }
   });
 }
+
+if(gup('remove')){
+  $.ajax({
+    type: 'POST',
+    url: '//localhost:8001/api/delete',
+    success: function(res, text, jqXHR) {
+        console.log(res);
+    },
+    error: function (res, text, errorThrown) {
+      // console.log(errorThrown);
+      console.log('POST failed');
+      console.log(res);
+    }
+  })
+}
+
 
 if(gup('geo')){
   $.getJSON("http://freegeoip.net/json/", function(data) {
