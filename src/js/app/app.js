@@ -171,16 +171,11 @@ function gup(name) {
   }
 }
 
-
-if(gup('ajax')){
-
+function ajaxCall(api, data){
   $.ajax({
       type: 'POST',
-      url: '//localhost:8001/api/create',
-      data: {
-        "name": "bro",
-        "msg" : "yolo"
-      },
+      url: '//localhost:8001/api/' + api,
+      data: data,
       dataType: 'json',
       success: function(res, text, jqXHR) {
           console.log(res);
@@ -192,6 +187,34 @@ if(gup('ajax')){
       }
   });
 }
+
+
+if(gup('ajax') === 'create'){
+  ajaxCall('create', {
+    "name": "bro",
+    "msg" : "yolo"
+  });
+}
+
+if(gup('ajax') === 'read'){
+  ajaxCall('read', {
+
+  });
+}
+
+if(gup('ajax') === 'update'){
+  ajaxCall('update', {
+    id: 
+  });
+}
+
+if(gup('ajax') === 'delete'){
+  ajaxCall('delete', {
+
+  });
+}
+
+
 
 if(gup('remove')){
   $.ajax({

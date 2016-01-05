@@ -1,7 +1,9 @@
-
 /**
  * Mongoose
+ * https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
  */
+
+
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -86,8 +88,7 @@ User.findOneAndUpdate({fname: "Grant"}, {fname: 'Geebebe'}, function(err, user){
 });
 
 // --- OR
-User.findByIdAndUpdate()
-
+User.findByIdAndUpdate(id, {fname: "Geebebe"}, fn);
 
 // === Delete
 User.find({fname: "Grant"}, function(err, user){
@@ -98,4 +99,4 @@ User.find({fname: "Grant"}, function(err, user){
 User.findOneAndRemove({fname: "Grant"});
 
 // --- OR
-User.findByIdAndRemove(1);
+User.findByIdAndRemove(1, fn);

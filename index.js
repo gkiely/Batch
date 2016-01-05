@@ -87,8 +87,8 @@ app.post('/api/create', function(req, res){
   elog.save(req.body, function(err, doc){
     if(err) throw err;
 
-    console.log('user save successfully');
-    console.log(doc);
+    // console.log('user save successfully');
+    // console.log(doc);
     successCallback(res);
   });
 });
@@ -103,12 +103,13 @@ app.post('/api/read', function(req, res){
 });
 
 app.post('/api/update', function(req, res){
-  elog.find(function(err, doc){
+  elog.findByIdAndUpdate(req.id, req.update, function(err, doc){
     if(err) throw err;
-
+    
     successCallback(res);
   });
 });
+
 
 
 app.post('/api/delete', function(req, res){
