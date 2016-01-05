@@ -14,10 +14,11 @@ var mongoose   = require('mongoose');
 /**
  * Instances
  */
-var app    = express();
-var router = express.Router();
-var port   = 8001;
-var Schema = mongoose.Schema;
+var app       = express();
+var router    = express.Router();
+var port      = 8001;
+var Schema    = mongoose.Schema;
+var _ObjectId = mongoose.Types.ObjectId;
 
 // UserInfo
 var UAParser    = require('user-agent-parser');
@@ -40,9 +41,17 @@ function getUserData(req){
   }
 }
 
-function successCallback(res){
-  res.json({status: 'success'});
+function errorHandler(err){
+  if(err) throw err;
+}
+
+function successCallback(res, obj){
+  res.json(obj || {status: 'success'});
   res.end('success');
+}
+
+function ObjectId(str){
+  return new _ObjectId(str);
 }
 
 
@@ -74,7 +83,7 @@ var errorLogSchema = new Schema({
 
 
 
-var ErrorLog = mongoose.model('ErrorLog', errorLogSchema);
+var ErrorLog = mongoose.model('errorlog', errorLogSchema, 'errorlog');
 
 
 /**
@@ -95,18 +104,24 @@ app.post('/api/create', function(req, res){
 
 
 app.post('/api/read', function(req, res){
-  elog.find(function(err, doc){
+  ErrorLog.find(function(err, doc){
     if(err) throw err;
-
-    successCallback(res);
+    successCallback(res, doc);
   });
 });
 
+
 app.post('/api/update', function(req, res){
-  elog.findByIdAndUpdate(req.id, req.update, function(err, doc){
-    if(err) throw err;
-    
-    successCallback(res);
+  // ErrorLog.findByIdAndUpdate(req.id, req.update, function(err, doc){
+  //   if(err) throw err;
+  //   successCallback(res, doc);
+  // });
+
+  ErrorLog.findById(ObjectId(req.id), function(err, doc){
+    errorHandler(err);
+    console.log(doc);
+
+    successCallback(res, doc);
   });
 });
 

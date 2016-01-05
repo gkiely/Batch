@@ -1,41 +1,4 @@
 /**
- * Overrides
- */
-if(window.console){
-  let log = console.log;
-  let warn = console.warn;
-  let error = console.error;
-
-  console.batchLog = function(){
-    log.apply(this, Array.prototype.slice.call(arguments));
-  };
-
-  console.log = function(){
-    var arr = Array.prototype.slice.call(arguments);
-    log.apply(this, arr);
-    Batch._track(JSON.stringify(arr), 'clog');
-  };
-  console.warn = function(){
-    warn.apply(this, Array.prototype.slice.call(arguments));
-    Batch._track(arguments[0], 'cwarn');
-  };
-  console.error = function(){
-    error.apply(this, Array.prototype.slice.call(arguments));
-    Batch._track(arguments[0], 'cerror');
-  };
-}
-
-
-XMLHttpRequest.prototype.reallySend = XMLHttpRequest.prototype.send;
-XMLHttpRequest.prototype.send = function(body) {
-  console.batchLog('BatchJS: ajax request sent');
-  this.reallySend(body);
-};
-
-
-
-
-/**
  * Batch
  */
 let Batch = (function(win, doc, body){
@@ -103,7 +66,7 @@ let Batch = (function(win, doc, body){
         parse = type;
       }
 
-      if(typeof args === "object"){
+      if(typeof args === "object" && args.length === undefined){
         str = JSON.stringify(str);
       }
       else{
@@ -154,8 +117,53 @@ let Batch = (function(win, doc, body){
       ._sendError(str, 'log', true)
     };
 
+    Batch.console = false;
+
     return Batch;
 })(window, document, document.body);
+
+
+
+
+/**
+ * Native hooks
+ */
+if(window.console && Batch.console){
+  let log = console.log;
+  let warn = console.warn;
+  let error = console.error;
+
+  console.batchLog = function(){
+    log.apply(this, Array.prototype.slice.call(arguments));
+  };
+
+  console.log = function(){
+    var arr = Array.prototype.slice.call(arguments);
+    log.apply(this, arr);
+    Batch._track(JSON.stringify(arr), 'clog');
+  };
+  console.warn = function(){
+    warn.apply(this, Array.prototype.slice.call(arguments));
+    Batch._track(arguments[0], 'cwarn');
+  };
+  console.error = function(){
+    error.apply(this, Array.prototype.slice.call(arguments));
+    Batch._track(arguments[0], 'cerror');
+  };
+}
+
+
+XMLHttpRequest.prototype.reallySend = XMLHttpRequest.prototype.send;
+XMLHttpRequest.prototype.send = function(body) {
+  if(Batch.console){
+      console.batchLog('BatchJS: ajax request sent');
+  }
+  this.reallySend(body);
+};
+
+
+
+
 
 
 
@@ -198,19 +206,17 @@ if(gup('ajax') === 'create'){
 
 if(gup('ajax') === 'read'){
   ajaxCall('read', {
-
   });
 }
 
 if(gup('ajax') === 'update'){
   ajaxCall('update', {
-    id: 
+    id: '568ad159e40f2a96173af5d5'
   });
 }
 
 if(gup('ajax') === 'delete'){
   ajaxCall('delete', {
-
   });
 }
 
