@@ -211,7 +211,10 @@ if(gup('ajax') === 'read'){
 
 if(gup('ajax') === 'update'){
   ajaxCall('update', {
-    id: '568ad159e40f2a96173af5d5'
+    id: '568ad159e40f2a96173af5d5',
+    update:{
+      "name": "heyyy"
+    }
   });
 }
 

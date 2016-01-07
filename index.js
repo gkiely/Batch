@@ -51,6 +51,9 @@ function successCallback(res, obj){
 }
 
 function ObjectId(str){
+  if(str === undefined){
+    console.log('string passed to ObjectId() was undefined', '\007');
+  }
   return new _ObjectId(str);
 }
 
@@ -83,7 +86,7 @@ var errorLogSchema = new Schema({
 
 
 
-var ErrorLog = mongoose.model('errorlog', errorLogSchema, 'errorlog');
+var ErrorLog = mongoose.model('errorlog', errorLogSchema, 'errorlogs');
 
 
 /**
@@ -112,15 +115,19 @@ app.post('/api/read', function(req, res){
 
 
 app.post('/api/update', function(req, res){
-  // ErrorLog.findByIdAndUpdate(req.id, req.update, function(err, doc){
+  // ErrorLog.find(function(err, doc){
   //   if(err) throw err;
   //   successCallback(res, doc);
   // });
 
-  ErrorLog.findById(ObjectId(req.id), function(err, doc){
-    errorHandler(err);
-    console.log(doc);
+  // ErrorLog.findById(ObjectId(req.body.id), function(err, doc){
+  //   errorHandler(err);
+  //   // console.log(doc);
+  //   successCallback(res, doc);
+  // });
 
+  ErrorLog.findByIdAndUpdate(req.body.id, req.body.update, function(err, doc){
+    if(err) throw err;
     successCallback(res, doc);
   });
 });
