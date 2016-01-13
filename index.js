@@ -46,7 +46,7 @@ function errorHandler(err){
 }
 
 function successCallback(res, obj){
-  res.json(obj || {status: 'success'});
+  res.send(obj || {status: 'success'});
   res.end('success');
 }
 
