@@ -1,5 +1,4 @@
-let $ = require('jquery');
-
+import $ from 'jquery';
 
 /**
  * Batch

@@ -5,6 +5,8 @@ var livereload = require('webpack-livereload-plugin');
 module.exports = {
   watch: true,
   devtool: 'cheap-module-source-map',
+  cached: true,
+  cachedAssets: true,
   // plugins:[
   //   new livereload()
   // ],
