@@ -55,6 +55,7 @@ gulp.task('webpack:dev', function(cb){
   };
   return gulp.src(config.js.input)
   .pipe(webpack(wpConfig))
+  .on('error', handleError)
   .pipe(gulp.dest(config.js.dist))
 });
 
