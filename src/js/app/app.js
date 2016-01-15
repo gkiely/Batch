@@ -13,13 +13,11 @@ var logs = [];
 
 
 class App extends React.Component {
-    // state = [msg: "testasdf"]
-    constructor(props) {
-      super(props);
-      this.state = {
-        items:[]
-      };
-    }
+    static propTypes = {
+    };
+    state = {
+      items:[]
+    };
 
     componentDidMount(){
       var that = this;
@@ -33,7 +31,6 @@ class App extends React.Component {
     }
 
     render() {
-
       var listItems = this.state.items.map(function(item){
         return (
           <li key={item._id}>
