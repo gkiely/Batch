@@ -9,6 +9,7 @@ var cors       = require('cors');
 var bodyParser = require('body-parser');
 var express    = require('express');
 var mongoose   = require('mongoose');
+var pgp        = require('pg-promise')();
 
 
 /**
@@ -23,6 +24,48 @@ var _ObjectId = mongoose.Types.ObjectId;
 // UserInfo
 var UAParser    = require('user-agent-parser');
 var parser      = new UAParser();
+
+// Postgres
+var cn = {
+  host: 'localhost',
+  port: 5432,
+  database: 'sample_db',
+  user: 'grantkiely',
+  password: null
+};
+
+var db = pgp(cn);
+
+db.one('SELECT NOW() AS "theTime"')
+.then(function(data){
+  console.log(data);
+})
+.catch(function(err){
+});
+
+
+
+// db.one('insert into users(name, active) values($1, $2) returning id', ['John', 'true'])
+// .then(function(data){
+//   console.log(data);  
+// })
+// .catch(function(err){
+//   console.error(err); 
+// });
+
+
+
+// db.none("delete from users where name='John'");
+
+
+db.query('select * from users')
+.then(function(data){
+  console.log(data);
+})
+.catch(function(err){
+  console.error(err);
+});
+
 
 
 /**
