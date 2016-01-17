@@ -18,12 +18,9 @@ var pgp        = require('pg-promise')();
 var app       = express();
 var router    = express.Router();
 var port      = 8001;
-var Schema    = mongoose.Schema;
-var _ObjectId = mongoose.Types.ObjectId;
-
-// UserInfo
 var UAParser    = require('user-agent-parser');
 var parser      = new UAParser();
+
 
 // Postgres
 var cn = {
@@ -36,12 +33,12 @@ var cn = {
 
 var db = pgp(cn);
 
-db.one('SELECT NOW() AS "theTime"')
-.then(function(data){
-  console.log(data);
-})
-.catch(function(err){
-});
+// db.one('SELECT NOW() AS "theTime"')
+// .then(function(data){
+//   console.log(data);
+// })
+// .catch(function(err){
+// });
 
 
 
@@ -105,7 +102,6 @@ function ObjectId(str){
 /**
  * Server config
  */
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -113,79 +109,48 @@ app.use(bodyParser.urlencoded({
 }));
 
 
-
-/**
- * Setup mongoose
- */
-mongoose.connect('mongodb://localhost/test');
-
-
-
-var errorLogSchema = new Schema({
-  name: String,
-  msg: String,
-  date: {type: Date, default: Date.now}
+router.use(function(req, res, next){
+  console.log('Request received.');
+  next();
 });
-
-
-
-var ErrorLog = mongoose.model('errorlog', errorLogSchema, 'errorlogs');
 
 
 /**
  * Routes/api
  */
-app.post('/api/create', function(req, res){
+app.get('/', function(req, res){
+  res.json({msg: 'huzzaa'})
+});
+
+//-- Create
+router.post('logs', function(req, res){
   // console.log(req.body);
-  var elog = new ErrorLog(req.body);
-
-  elog.save(req.body, function(err, doc){
-    if(err) throw err;
-
-    // console.log('user save successfully');
-    // console.log(doc);
-    successCallback(res);
-  });
 });
 
+//-- Read
+router.get('logs', function(req, res){
 
-app.post('/api/read', function(req, res){
-  ErrorLog.find(function(err, doc){
-    if(err) throw err;
-    successCallback(res, doc);
-  });
 });
 
-
-app.post('/api/update', function(req, res){
-  // ErrorLog.find(function(err, doc){
-  //   if(err) throw err;
-  //   successCallback(res, doc);
-  // });
-
-  // ErrorLog.findById(ObjectId(req.body.id), function(err, doc){
-  //   errorHandler(err);
-  //   // console.log(doc);
-  //   successCallback(res, doc);
-  // });
-
-  ErrorLog.findByIdAndUpdate(req.body.id, req.body.update, function(err, doc){
-    if(err) throw err;
-    successCallback(res, doc);
-  });
-});
-
-
-
-app.post('/api/delete', function(req, res){
+router.get('logs/:id', function(req, res){
   
-  ErrorLog.remove({}, function(err, doc){
-    if(err) throw err;
+});
 
-    successCallback(res);
-  });
-})
+//-- Update
+router.put('logs/:id', function(req, res){
 
+});
+
+//-- Delete
+router.delete('logs/:id', function(req, res){
+
+});
+
+
+
+
+
+app.use('/api/', router);
 
 
 
