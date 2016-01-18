@@ -55,13 +55,7 @@ var db = pgp(cn);
 // db.none("delete from users where name='John'");
 
 
-db.query('select * from users')
-.then(function(data){
-  console.log(data);
-})
-.catch(function(err){
-  console.error(err);
-});
+
 
 
 
@@ -109,40 +103,55 @@ app.use(bodyParser.urlencoded({
 }));
 
 
-router.use(function(req, res, next){
-  console.log('Request received.');
-  next();
-});
 
 
 /**
  * Routes/api
  */
+
+router.use(function(req, res, next){
+  console.log('Request received.');
+  next();
+});
+
 app.get('/', function(req, res){
   res.json({msg: 'huzzaa'})
 });
 
 //-- Create
-router.post('logs', function(req, res){
+router.post('/logs', function(req, res){
   // console.log(req.body);
+  // var log = new Log(req.body);
 });
 
 //-- Read
-router.get('logs', function(req, res){
-
+router.get('/logs', function(req, res){
+  db.query('select * from people limit 10')
+  .then(function(data){
+    res.send(data);
+  })
+  .catch(function(err){
+    res.send(err);
+  });
 });
 
-router.get('logs/:id', function(req, res){
-  
+router.get('/logs/:id', function(req, res){
+  db.query('select * from people where id=$1', req.params.id)
+  .then(function(data){
+    res.send(data);
+  })
+  .catch(function(err){
+    res.send(err);
+  })
 });
 
 //-- Update
-router.put('logs/:id', function(req, res){
+router.put('/logs/:id', function(req, res){
 
 });
 
 //-- Delete
-router.delete('logs/:id', function(req, res){
+router.delete('/logs/:id', function(req, res){
 
 });
 
@@ -150,7 +159,7 @@ router.delete('logs/:id', function(req, res){
 
 
 
-app.use('/api/', router);
+app.use('/api', router);
 
 
 
