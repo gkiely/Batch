@@ -32,7 +32,7 @@
 
 
 /* Limit */
-select * from people limit 10;
+-- select * from people limit 10;
 
 /* OR */
 -- select * from people where lname = 'Page';
