@@ -118,10 +118,17 @@ app.get('/', function(req, res){
   res.json({msg: 'huzzaa'})
 });
 
-//-- Create
+//-- Create/Insert
 router.post('/logs', function(req, res){
   // console.log(req.body);
   // var log = new Log(req.body);
+  db.query(`INSERT INTO "people" (fname,lname,age,company) VALUES ('Stewart','George',42,'Metus Aliquam Erat Industries')`)
+  .then(function(data){
+    res.send(data);
+  })
+  .catch(function(err){
+    res.send(err);
+  })
 });
 
 //-- Read
@@ -135,6 +142,7 @@ router.get('/logs', function(req, res){
   });
 });
 
+//-- Read by id
 router.get('/logs/:id', function(req, res){
   db.query('select * from people where id=$1', req.params.id)
   .then(function(data){
@@ -147,12 +155,24 @@ router.get('/logs/:id', function(req, res){
 
 //-- Update
 router.put('/logs/:id', function(req, res){
-
+  // db.query('update logs set type="warn" where id=', req.params.id)
+  // .then(function(data){
+  //   res.send(data);
+  // })
+  // .catch(function(err){
+  //   res.send(err);
+  // })
 });
 
 //-- Delete
 router.delete('/logs/:id', function(req, res){
-
+  db.query('delete from people where id=$1', req.params.id)
+  .then(function(data){
+    res.send(data);
+  })
+  .catch(function(err){
+    res.send(err);
+  })
 });
 
 
