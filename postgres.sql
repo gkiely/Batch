@@ -49,7 +49,7 @@ select * from people limit 10;
 -- DROP TABLE people;
 
 /* Delete all */
--- delete from people;
+-- delete from people; 
 
 
 /* Update */

@@ -1,11 +1,10 @@
 import $ from 'jquery';
 
-function ajax(api, data){
+function ajax(api, type, data){
   return $.ajax({
-      type: 'POST',
+      type: type || 'GET',
       url: '//localhost:8001/api/' + api,
-      data: data,
-      dataType: 'json',
+      data: data || "",
       success: function(res, text, jqXHR) {
           // console.log(res);
       },

@@ -22,7 +22,7 @@ class App extends React.Component {
     componentDidMount(){
       var that = this;
 
-      ajax('read')
+      ajax('logs')
       .then(function(data){
         that.setState({
           items: data
@@ -33,8 +33,8 @@ class App extends React.Component {
     render() {
       var listItems = this.state.items.map(function(item){
         return (
-          <li key={item._id}>
-            {item.name} - {item.msg}
+          <li key={item.id}>
+            {item.fname} - {item.company}
           </li>
         );
       });
