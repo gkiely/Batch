@@ -17,6 +17,7 @@ var fileInclude   = require('gulp-file-include'),
     webpack       = require('webpack-stream'),
     //Build only
     extend        = require('extend'),
+    gulpif        = require('gulp-if'),
     htmlmin       = function(){},
     minifyCSS     = function(){},
     uglify        = function(){},
@@ -36,12 +37,14 @@ var handleError = function(err) {
 ==============================*/
 gulp.task('server', function(){
   var ip = require('get-my-ip')();
-  gulp.src(config.dist)
-  .pipe(webserver())
-  .pipe(webserver({
-    host: ip,
-    livereload: true
-  }))
+  var stream = gulp.src(config.dist);
+  stream.pipe(webserver());
+  if(ip){
+    stream.pipe(webserver({
+        host: ip,
+        livereload: true
+    }))
+  }
 });
 
 

@@ -19,6 +19,7 @@
 --   active bool
 -- )
 
+
 /* Insert */
 -- INSERT INTO users (name, active) VALUES ('Travis', false);
 
