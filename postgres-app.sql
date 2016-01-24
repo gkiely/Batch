@@ -2,15 +2,32 @@
 \c sample_db
 
 
+-- CREATE TABLE webuser(
+--   id BIGSERIAL primary key,
+--   ip cidr,
+--   browser text,
+--   screenSize text,
+--   dateFirstSeen date
+-- );
+
 -- CREATE TABLE logs(
---     id BIGSERIAL,
+--     id BIGSERIAL primary key,
 --     msg text,
 --     website text,
---     ip cidr,
 --     logDate date,
 --     stacktrace text,
---     browser text
--- )
--- appUserID int
+--     browser text,
+--     webuserID text references webuser(id)
+-- );
 
-select * from logs limit 10;
+-- CREATE TABLE appuser(
+--   id BIGSERIAL primary key,
+--   email text,
+--   username text,
+--   password text
+-- );
+
+\l
+
+-- select * from logs limit 10;
+-- drop table logs;
