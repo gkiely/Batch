@@ -17,7 +17,7 @@
 --     logDate date,
 --     stacktrace text,
 --     browser text,
---     webuserID text references webuser(id)
+--     webuserID BIGSERIAL references webuser(id)
 -- );
 
 -- CREATE TABLE appuser(
@@ -27,7 +27,11 @@
 --   password text
 -- );
 
-\l
 
+
+-- drop table appuser,logs,webuser CASCADE;
+
+
+\dt
 -- select * from logs limit 10;
 -- drop table logs;
