@@ -34,7 +34,7 @@ class App extends React.Component {
       var listItems = this.state.items.map(function(item){
         return (
           <li key={item.id}>
-            {item.fname} - {item.company}
+            {item.msg} - {item.logdate}
           </li>
         );
       });
