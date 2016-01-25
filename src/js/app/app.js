@@ -20,11 +20,11 @@ class App extends React.Component {
     };
 
     componentDidMount(){
-      var that = this;
+      var _this = this;
 
       ajax('logs')
       .then(function(data){
-        that.setState({
+        _this.setState({
           items: data
         })
       });

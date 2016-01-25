@@ -33,29 +33,6 @@ var cn = {
 
 var db = pgp(cn);
 
-// db.one('SELECT NOW() AS "theTime"')
-// .then(function(data){
-//   console.log(data);
-// })
-// .catch(function(err){
-// });
-
-
-
-// db.one('insert into users(name, active) values($1, $2) returning id', ['John', 'true'])
-// .then(function(data){
-//   console.log(data);  
-// })
-// .catch(function(err){
-//   console.error(err); 
-// });
-
-
-
-// db.none("delete from users where name='John'");
-
-
-
 
 
 
@@ -73,22 +50,6 @@ function getUserData(req){
     date: dateTime(),
     origin: req.headers.origin
   }
-}
-
-function errorHandler(err){
-  if(err) throw err;
-}
-
-function successCallback(res, obj){
-  res.send(obj || {status: 'success'});
-  res.end('success');
-}
-
-function ObjectId(str){
-  if(str === undefined){
-    console.log('string passed to ObjectId() was undefined', '\007');
-  }
-  return new _ObjectId(str);
 }
 
 
@@ -122,6 +83,8 @@ app.get('/', function(req, res){
 router.post('/logs', function(req, res){
   // console.log(req.body);
   // var log = new Log(req.body);
+  // db.query(`INSERT INTO "people" (fname,lname,age,company) VALUES ('Stewart','George',42,'Metus Aliquam Erat Industries')`)
+
   db.query(`INSERT INTO "people" (fname,lname,age,company) VALUES ('Stewart','George',42,'Metus Aliquam Erat Industries')`)
   .then(function(data){
     res.send(data);
@@ -133,7 +96,7 @@ router.post('/logs', function(req, res){
 
 //-- Read
 router.get('/logs', function(req, res){
-  db.query('select * from people limit 10')
+  db.query('select * from logs limit 10')
   .then(function(data){
     res.send(data);
   })
