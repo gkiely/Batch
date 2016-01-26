@@ -162,6 +162,7 @@ XMLHttpRequest.prototype.send = function(body) {
   this.addEventListener('load', function(d, a){
     if (this.status >= 200 && this.status < 400){
       // @todo: track this ajax request
+      console.batchLog('BatchJS: ajax request received');
     }
   });
   this.reallySend(body);
