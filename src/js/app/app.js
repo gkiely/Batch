@@ -30,6 +30,11 @@ class App extends React.Component {
       });
     }
 
+    doThis(e){
+      e.preventDefault();
+      console.log('hi');
+    }
+
     render() {
       var listItems = this.state.items.map(function(item){
         return (
@@ -40,9 +45,9 @@ class App extends React.Component {
       });
 
         return(
-          <div className="">        
-            <h3>Error</h3>
-            <a id="t1" href="">click here</a> to send an error to the server
+          <div className="">
+            <h3>Testing</h3>
+            <a id="t1" href="" onClick={this.doThis}>click here</a> to send an error to the server
             <br/><br/>
 
             <h1>Data print out</h1>
