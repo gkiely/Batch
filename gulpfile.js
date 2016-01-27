@@ -12,9 +12,10 @@ var fileInclude   = require('gulp-file-include'),
     // remember      = require('gulp-remember');
     // sass          = require('gulp-sass'),
     // sourcemaps    = require('gulp-sourcemaps'),
+    gutil         = require('gulp-util');
     webserver     = require('gulp-webserver'),
-    // webpack       = require('webpack'),
-    webpack       = require('webpack-stream'),
+    webpack       = require('webpack'),
+    // webpack       = require('webpack-stream'),
     //Build only
     extend        = require('extend'),
     gulpif        = require('gulp-if'),
@@ -53,13 +54,28 @@ gulp.task('server', function(){
 ==================================*/
 gulp.task('webpack:dev', function(cb){
   var wpConfig = prod ? require('./webpack.prod.js') : require('./webpack.config.js');  
+  // wpConfig.output = {
+  //   filename: 'bundle.js'
+  // };
+  wpConfig.entry = './src/js/app/App';
   wpConfig.output = {
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    path: config.js.dist
   };
-  return gulp.src(config.js.input)
-  .pipe(webpack(wpConfig))
+  webpack(wpConfig, function(err, stats){
+    if(err) throw new gutil.PluginError("webpack", err);
+    else{
+      console.log('wepback updated successfully');
+    }
+    // gutil.log("[webpack]", stats.toString({
+    //     // output options
+    // }));
+  });
+   
+  // return gulp.src(config.js.input)
+  // .pipe(webpack(wpConfig))
   // .on('error', handleError)
-  .pipe(gulp.dest(config.js.dist))
+  // .pipe(gulp.dest(config.js.dist))
 });
 
 

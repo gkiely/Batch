@@ -40,7 +40,11 @@ class App extends React.Component {
       });
 
         return(
-          <div className="">
+          <div className="">        
+            <h3>Error</h3>
+            <a id="t1" href="">click here</a> to send an error to the server
+            <br/><br/>
+
             <h1>Data print out</h1>
             {listItems}
           </div>
