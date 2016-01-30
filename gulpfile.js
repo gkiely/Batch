@@ -15,7 +15,7 @@ var fileInclude   = require('gulp-file-include'),
     gutil         = require('gulp-util');
     webserver     = require('gulp-webserver'),
     // webpack       = require('webpack'),
-    webpack       = require('webpack-stream'),
+    webpackStream = require('webpack-stream'),
     //Build only
     extend        = require('extend'),
     gulpif        = require('gulp-if'),
@@ -44,7 +44,7 @@ gulp.task('server', function(){
     stream.pipe(webserver({
         host: ip,
         livereload: true
-    }))
+    }));
   }
 });
 
@@ -71,9 +71,10 @@ gulp.task('webpack:dev', function(cb){
   
   wpConfig.output = {
     filename: 'bundle.js'
-  };   
+  };
+  
   return gulp.src(config.js.input)
-  .pipe(webpack(wpConfig))
+  .pipe(webpackStream(wpConfig))
   .on('error', handleError)
   .pipe(gulp.dest(config.js.dist))
 });

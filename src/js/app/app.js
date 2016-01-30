@@ -3,36 +3,39 @@ import React    from 'react';
 import ReactDOM from 'react-dom';
 
 // -- App
-import BatchJS from './batch.js';
-import ajax from './ajax.js';
-
-// Ajax call
-var logs = [];
+import Batch from './batch';
+import ajax from './ajax';
 
 
-
+/*
+ - Post, check on server if ip and details already exist. If no create new users
+ - Then: Create cookie
+ - Next visit: If cookie don't post again, else post 
+ */
 
 class App extends React.Component {
     static propTypes = {
     };
+
     state = {
       items:[]
     };
 
     componentDidMount(){
       var _this = this;
-
-      ajax('logs')
+      ajax.get('logs')
       .then(function(data){
+        if(!data.error){
+          
+        }
         _this.setState({
           items: data
         })
       });
     }
 
-    doThis(e){
+    sendUserData(e){
       e.preventDefault();
-      console.log('hi');
     }
 
     render() {
@@ -47,7 +50,7 @@ class App extends React.Component {
         return(
           <div className="">
             <h3>Testing</h3>
-            <a id="t1" href="" onClick={this.doThis}>click here</a> to send an error to the server
+            <button id="t1" onClick={this.doThis}>click here</button> to send user data
             <br/><br/>
 
             <h1>Data print out</h1>

@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 var express    = require('express');
 var mongoose   = require('mongoose');
 var pgp        = require('pg-promise')();
+var publicIp   = require('public-ip');
 
 
 /**
@@ -44,7 +45,6 @@ function getUserData(req){
   var uaResult = parser.setUA(ua).getResult();
 
   return{
-    ip: req.ip,
     browser: [uaResult.browser.name, uaResult.browser.major],
     os: [uaResult.os.name, uaResult.os.version],
     date: dateTime(),
@@ -76,7 +76,34 @@ router.use(function(req, res, next){
 });
 
 app.get('/', function(req, res){
-  res.json({msg: 'huzzaa'})
+  res.json({msg: 'huzzaa'});
+});
+
+
+
+router.post('/users', function(req, res){
+  var userData = getUserData(req);
+  var ipCheck = publicIp.v4(function(err, ip){
+    userData.ip = ip;
+    
+    db.query('SELECT * FROM users where ip=')
+    .then(function(){
+      if(data.length === 0){
+        db.query(`INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('127.0.0.1', 'chrome', 300, 700)`)  
+      }
+      else{
+        res.send(data.id);
+      }
+    });
+
+
+  });
+
+
+
+  
+  
+
 });
 
 //-- Create/Insert
@@ -85,7 +112,7 @@ router.post('/logs', function(req, res){
   // var log = new Log(req.body);
   // db.query(`INSERT INTO "people" (fname,lname,age,company) VALUES ('Stewart','George',42,'Metus Aliquam Erat Industries')`)
 
-  db.query(`INSERT INTO "people" (fname,lname,age,company) VALUES ('Stewart','George',42,'Metus Aliquam Erat Industries')`)
+  db.query(`INSERT INTO "logs" (msg,website,stacktrace) VALUES ('hi there', 'www.google.com', 'stacked', 4)`)
   .then(function(data){
     res.send(data);
   })
@@ -94,8 +121,10 @@ router.post('/logs', function(req, res){
   })
 });
 
+
 //-- Read
 router.get('/logs', function(req, res){
+
   db.query('select * from logs limit 10')
   .then(function(data){
     res.send(data);
