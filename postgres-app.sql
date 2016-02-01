@@ -37,5 +37,5 @@
 
 \dt
 -- select * from people limit 10;
-select * from logs, users limit 10;
+-- select * from logs limit 10;
 -- drop table logs;

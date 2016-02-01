@@ -69,7 +69,6 @@ app.use(bodyParser.urlencoded({
 /**
  * Routes/api
  */
-
 router.use(function(req, res, next){
   console.log('Request received.');
   next();
@@ -80,14 +79,59 @@ app.get('/', function(req, res){
 });
 
 
+function getPublicIp(){
+  return new Promise(function(res, rej){
+    publicIp.v4(function(err, ip){
+      if(ip){
+        resolve(ip);
+      }
+      else{
+        reject(err);
+      }
+    });
+  });
+}
 
-router.post('/users', function(req, res){
+function checkUserExists(){
+
+}
+
+
+
+router.post('/user', function(req, res){
   var userData = getUserData(req);
+
+  // New Promises approach
+  getPublicIp()
+  .then(function(data){
+    userData.ip = data;
+  })
+  .then(function(){
+    // See if this bubbling works first
+    return db.query('SELECT * FROM users where ip=');
+  })
+  .then(function(data){
+    // This code is too large
+    return new Promise(resolve, reject){
+      if(data.length === 0){
+        resolve(function(){
+          return db.query(`INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('127.0.0.1', 'chrome', 300, 700)`);
+        });
+      }
+      else{
+        reject(function(){
+          res.send(data.id);
+        });
+      }
+    }
+  })
+
+  // Old method
   var ipCheck = publicIp.v4(function(err, ip){
     userData.ip = ip;
     
     db.query('SELECT * FROM users where ip=')
-    .then(function(){
+    .then(function(data){
       if(data.length === 0){
         db.query(`INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('127.0.0.1', 'chrome', 300, 700)`)  
       }
@@ -95,15 +139,7 @@ router.post('/users', function(req, res){
         res.send(data.id);
       }
     });
-
-
   });
-
-
-
-  
-  
-
 });
 
 //-- Create/Insert

@@ -7,11 +7,9 @@ import Batch from './batch';
 import ajax from './ajax';
 
 
-/*
- - Post, check on server if ip and details already exist. If no create new users
- - Then: Create cookie
- - Next visit: If cookie don't post again, else post 
- */
+setTimeout(function(){
+  var user = ajax.post('user');  
+}, 3000);
 
 class App extends React.Component {
     static propTypes = {
@@ -26,7 +24,7 @@ class App extends React.Component {
       ajax.get('logs')
       .then(function(data){
         if(!data.error){
-          
+
         }
         _this.setState({
           items: data
