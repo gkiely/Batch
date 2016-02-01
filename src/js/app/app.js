@@ -10,7 +10,7 @@ import ajax from './ajax';
 
 
 setTimeout(function(){
-  var user = ajax.post('user');
+  // var user = ajax.post('user');
 }, 2000);
 
 class App extends React.Component {

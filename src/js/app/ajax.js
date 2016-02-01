@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import Batch from './batch';
 
 
 //-- Defaults
@@ -11,8 +12,8 @@ let options = {
   },
   error: function (res, text, errorThrown) {
     // console.log(errorThrown);
-    console.log('Request failed');
-    console.log(res);
+    Batch.log('Request failed');
+    Batch.log(res);
   }
 };
 

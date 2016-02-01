@@ -5,15 +5,14 @@ import ajax from './ajax';
 /**
  * Batch
  */
-let Batch = (function(win, doc, body){
-    let Batch = {
-      url: "//batchjs",
-      debug: true,
-      console: false
-    };
 
-    Batch.prod || (Batch.prod = Batch.prod || !Batch.debug);
-    Batch.debug || (Batch.debug = !Batch.prod);
+//== Logs all Batch.log|warn|error to console instead of sending to server
+let debug = gup('debug');
+
+
+let Batch = (function(win, doc, body){
+
+    let Batch = {};
 
     /*===================================
     =            Private API            =
@@ -26,7 +25,7 @@ let Batch = (function(win, doc, body){
           // .replace(/\n/, '')
           // .replace(/^\s*at\s/gm, '')
 
-          console.log(str);
+          // console.log(str);
         }
         else{
           return "no stacktrace found";
@@ -34,7 +33,8 @@ let Batch = (function(win, doc, body){
     }
 
     Batch._track = function(){
-      // console.batchLog(arguments);
+      if(debug){
+      }
     };
 
     /**
@@ -45,7 +45,7 @@ let Batch = (function(win, doc, body){
     Batch._send = function(args, type, parse){
       ajax.post('logs', type)
       .then(function(data){
-        console.batchLog('yoooo', data);
+        Batch.log('yoooo', data);
       });
     };
 
@@ -53,20 +53,24 @@ let Batch = (function(win, doc, body){
     /*==================================
     =            Public API            =
     ==================================*/
-    Batch.windowError = function(e){
-      // this._send(e, 'error');
-    }
-
     Batch.error = function(str){
-      this._send(str, 'error');
+      // this._send(str, 'error');
     };
 
     Batch.warn = function(str){
-      this._send(str, 'warn');
+      // this._send(str, 'warn');
     };
 
     Batch.log = function(str){
-      this._send(str, 'log')
+      var arr = Array.prototype.slice.call(arguments);
+      if(debug){
+         log.apply(console, arr);
+      }
+      else{
+
+      }
+      // log('hi');
+      // this._send(str, 'log');
     };
 
     return Batch;
@@ -80,36 +84,28 @@ let Batch = (function(win, doc, body){
  */
 
  window.addEventListener('error', function(e){
-   Batch.windowError(e);
+   Batch.error(e);
  });
 
 let log = console.log;
 let warn = console.warn;
 let error = console.error;
 
-console.batchLog = function(){
-  log.apply(this, Array.prototype.slice.call(arguments));
-};
-
 console.log = function(){
-  if(Batch.console){
     var arr = Array.prototype.slice.call(arguments);
     log.apply(this, arr);
-  }
-  Batch._track(JSON.stringify(arr), 'clog');
+    if(!debug){
+      Batch.log(JSON.stringify(arr), 'clog');
+    }
 };
 console.warn = function(){
-  if(Batch.console){
     warn.apply(this, Array.prototype.slice.call(arguments));
-  }
-  Batch._track(arguments[0], 'cwarn');
+    Batch.warn(arguments[0], 'cwarn');
 };
 
 console.error = function(){
-  if(Batch.console){
     error.apply(this, Array.prototype.slice.call(arguments));
-  }
-  Batch._track(arguments[0], 'cerror');
+    Batch.error(arguments[0], 'cerror');
 };
 
 XMLHttpRequest.prototype.reallySend = XMLHttpRequest.prototype.send;
@@ -117,7 +113,7 @@ XMLHttpRequest.prototype.send = function(body) {
   this.addEventListener('load', function(d, a){
     if (this.status >= 200 && this.status < 400){
       // @todo: track this ajax request
-      console.batchLog('BatchJS: ajax request received', this.responseText);
+      Batch.log('BatchJS: ajax request received', this.responseText);
     }
   });
   this.reallySend(body);
@@ -125,9 +121,7 @@ XMLHttpRequest.prototype.send = function(body) {
 
 XMLHttpRequest.prototype.reallyOpen = XMLHttpRequest.prototype.open;
 XMLHttpRequest.prototype.open = function(type, url) {
-  if(Batch.console){
-      console.batchLog('BatchJS: ajax started:', type + ',', 'url:', url);
-  }
+  Batch.log('BatchJS: ajax started:', type + ',', 'url:', url);
   this.reallyOpen(type, url);
 };
 
@@ -154,7 +148,6 @@ if(gup('test')){
     Batch.error('asdf');
     Batch.warn('yolo');
     Batch.log('logmeup');
-    console.log('testlog');
     console.warn('testwarn');
     console.error('testerror');
     var req = new XMLHttpRequest();
