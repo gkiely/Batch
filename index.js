@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Modules
  */
@@ -78,68 +80,52 @@ app.get('/', function(req, res){
   res.json({msg: 'huzzaa'});
 });
 
-
-function getPublicIp(){
-  return new Promise(function(res, rej){
-    publicIp.v4(function(err, ip){
-      if(ip){
-        resolve(ip);
-      }
-      else{
-        reject(err);
-      }
+let publicIpPromise = function(){
+  return new Promise(function(resolve, reject){
+    publicIp(function(err, ip){
+      return ip ? resolve(ip) : reject(err);
     });
   });
-}
-
-function checkUserExists(){
-
-}
+};
 
 
 
 router.post('/user', function(req, res){
   var userData = getUserData(req);
 
-  // New Promises approach
-  getPublicIp()
+  publicIpPromise()
   .then(function(data){
+    console.log(data);
     userData.ip = data;
   })
   .then(function(){
-    // See if this bubbling works first
-    return db.query('SELECT * FROM users where ip=');
+    // Fix this query
+    // return db.query('SELECT * FROM users where ip=');
+  })
+  .then(function(){
+    // return db.query(`INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('127.0.0.1', 'chrome', 300, 700)`);
   })
   .then(function(data){
-    // This code is too large
-    return new Promise(resolve, reject){
-      if(data.length === 0){
-        resolve(function(){
-          return db.query(`INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('127.0.0.1', 'chrome', 300, 700)`);
-        });
-      }
-      else{
-        reject(function(){
-          res.send(data.id);
-        });
-      }
-    }
+    console.log(data);
+  })
+  .catch(function(err){
+    console.log(err);
   })
 
   // Old method
-  var ipCheck = publicIp.v4(function(err, ip){
-    userData.ip = ip;
+  // var ipCheck = publicIp.v4(function(err, ip){
+  //   userData.ip = ip;
     
-    db.query('SELECT * FROM users where ip=')
-    .then(function(data){
-      if(data.length === 0){
-        db.query(`INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('127.0.0.1', 'chrome', 300, 700)`)  
-      }
-      else{
-        res.send(data.id);
-      }
-    });
-  });
+  //   db.query('SELECT * FROM users where ip=')
+  //   .then(function(data){
+  //     if(data.length === 0){
+  //       db.query(`INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('127.0.0.1', 'chrome', 300, 700)`)  
+  //     }
+  //     else{
+  //       res.send(data.id);
+  //     }
+  //   });
+  // });
 });
 
 //-- Create/Insert

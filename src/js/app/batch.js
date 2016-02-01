@@ -9,7 +9,7 @@ let Batch = (function(win, doc, body){
     let Batch = {
       url: "//batchjs",
       debug: true,
-      console: true
+      console: false
     };
 
     Batch.prod || (Batch.prod = Batch.prod || !Batch.debug);
@@ -34,7 +34,7 @@ let Batch = (function(win, doc, body){
     }
 
     Batch._track = function(){
-      console.batchLog(arguments);
+      // console.batchLog(arguments);
     };
 
     /**
@@ -92,16 +92,23 @@ console.batchLog = function(){
 };
 
 console.log = function(){
-  var arr = Array.prototype.slice.call(arguments);
-  log.apply(this, arr);
+  if(Batch.console){
+    var arr = Array.prototype.slice.call(arguments);
+    log.apply(this, arr);
+  }
   Batch._track(JSON.stringify(arr), 'clog');
 };
 console.warn = function(){
-  warn.apply(this, Array.prototype.slice.call(arguments));
+  if(Batch.console){
+    warn.apply(this, Array.prototype.slice.call(arguments));
+  }
   Batch._track(arguments[0], 'cwarn');
 };
+
 console.error = function(){
-  error.apply(this, Array.prototype.slice.call(arguments));
+  if(Batch.console){
+    error.apply(this, Array.prototype.slice.call(arguments));
+  }
   Batch._track(arguments[0], 'cerror');
 };
 
@@ -125,18 +132,17 @@ XMLHttpRequest.prototype.open = function(type, url) {
 };
 
 
-var user = window.localStorage.getItem('BatchJS:user');
+// var user = window.localStorage.getItem('BatchJS:user');
 
-setTimeout(function(){
-  if(!user){
-    ajax.post('users')
-    .then(function(data){
-      console.batchLog('---', data);
-      window.localStorage.setItem('BatchJS:user', data.id);
-    })
-  }
-
-}, 3000);
+// setTimeout(function(){
+//   if(!user){
+//     ajax.post('users')
+//     .then(function(data){
+//       console.batchLog('---', data);
+//       window.localStorage.setItem('BatchJS:user', data.id);
+//     })
+//   }
+// }, 3000);
 
 
 

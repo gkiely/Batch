@@ -5,11 +5,13 @@ import ReactDOM from 'react-dom';
 // -- App
 import Batch from './batch';
 import ajax from './ajax';
+// import "babel-polyfill";
+// import Promise from 'es6-promise';
 
 
 setTimeout(function(){
-  var user = ajax.post('user');  
-}, 3000);
+  var user = ajax.post('user');
+}, 2000);
 
 class App extends React.Component {
     static propTypes = {
