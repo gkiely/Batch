@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import gup from './gup';
 import ajax from './ajax';
+import store from 'store';
 
 /**
  * Batch
@@ -126,23 +127,57 @@ XMLHttpRequest.prototype.open = function(type, url) {
 };
 
 
-// var user = window.localStorage.getItem('BatchJS:user');
 
-// setTimeout(function(){
-//   if(!user){
-//     ajax.post('users')
-//     .then(function(data){
-//       console.batchLog('---', data);
-//       window.localStorage.setItem('BatchJS:user', data.id);
-//     })
-//   }
-// }, 3000);
 
+
+
+
+// ===============
+// Init
+// ===============
+var user = store.get('BatchJS');
+
+debugger
+if(user && user.id){
+  ajax.post('user', {id: user.id})
+  .then(function(data){
+    if(user.id === data.id){
+      // Existing user
+    }
+    else if(data.id){
+      store.set('user', {id: data.id})
+    }
+    else{
+      console.warn('no id returned from server');
+    }
+  })
+  .fail(function(err){
+    console.error(err);
+  });
+}
+else{
+  ajax.post('user')
+  .then(function(data){
+    if(data.id){
+      store.set('BatchJS', {id: data.id});
+    }
+    else{
+      console.warn('no id returned from server');
+    }
+  })
+  .fail(function(err){
+    console.error(err);
+  })
+}
 
 
 /**
  * Testing
  */
+if(gup('clean')){
+  store.remove('BatchJS');
+}
+
 if(gup('test')){
   function init(){
     Batch.error('asdf');

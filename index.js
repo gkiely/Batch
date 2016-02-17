@@ -13,6 +13,7 @@ var express    = require('express');
 var mongoose   = require('mongoose');
 var pgp        = require('pg-promise')();
 var publicIp   = require('public-ip');
+var uuid       = require('uuid');
 
 
 /**
@@ -91,14 +92,22 @@ let publicIpPromise = function(){
 
 
 router.post('/user', function(req, res){
-  var userData = getUserData(req);
+  var data = req.body;
+  var user = getUserData(req);
 
   publicIpPromise()
   .then(function(data){
     console.log(data);
-    userData.ip = data;
+    user.ip = data;
   })
   .then(function(){
+    // do a search for user GUID
+    // if it has the same ip, we have a match
+    
+    // else return a new guid
+    var guid = uuid.v1();
+
+
     // Fix this query
     // return db.query('SELECT * FROM users where ip=');
   })
@@ -107,25 +116,12 @@ router.post('/user', function(req, res){
   })
   .then(function(data){
     console.log(data);
+    res.send({id: userData.ip})
   })
   .catch(function(err){
-    console.log(err);
+    res.send(err);
+    console.log('---', err);
   })
-
-  // Old method
-  // var ipCheck = publicIp.v4(function(err, ip){
-  //   userData.ip = ip;
-    
-  //   db.query('SELECT * FROM users where ip=')
-  //   .then(function(data){
-  //     if(data.length === 0){
-  //       db.query(`INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('127.0.0.1', 'chrome', 300, 700)`)  
-  //     }
-  //     else{
-  //       res.send(data.id);
-  //     }
-  //   });
-  // });
 });
 
 //-- Create/Insert

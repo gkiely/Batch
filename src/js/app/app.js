@@ -5,13 +5,8 @@ import ReactDOM from 'react-dom';
 // -- App
 import Batch from './batch';
 import ajax from './ajax';
-// import "babel-polyfill";
 // import Promise from 'es6-promise';
 
-
-setTimeout(function(){
-  // var user = ajax.post('user');
-}, 2000);
 
 class App extends React.Component {
     static propTypes = {
@@ -25,12 +20,14 @@ class App extends React.Component {
       var _this = this;
       ajax.get('logs')
       .then(function(data){
-        if(!data.error){
+        if(data.errno){
 
         }
-        _this.setState({
-          items: data
-        })
+        else if(!data.error){
+           _this.setState({
+            items: data
+          });
+        }
       });
     }
 
@@ -39,6 +36,7 @@ class App extends React.Component {
     }
 
     render() {
+      // console.log(this.state);
       var listItems = this.state.items.map(function(item){
         return (
           <li key={item.id}>
