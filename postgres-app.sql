@@ -31,11 +31,12 @@
 -- drop table admin` CASCADE;
 -- drop table logs;
 
--- INSERT INTO "webusers" (ip, browser, screenSizeX, screenSizeY) VALUES ('127.0.0.1', 'chrome', 300, 700);
+-- INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('127.0.0.1', 'chrome', 300, 700);
 -- INSERT INTO "logs" (msg,website,stacktrace,webuserID) VALUES ('hi there', 'www.google.com', 'stacked', 4);
 
 
-\dt
+-- \dt
 -- select * from people limit 10;
+select * from users;
 -- select * from logs limit 10;
 -- drop table logs;

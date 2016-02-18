@@ -13,7 +13,7 @@ var express    = require('express');
 var mongoose   = require('mongoose');
 var pgp        = require('pg-promise')();
 var publicIp   = require('public-ip');
-var uuid       = require('uuid');
+// var uuid       = require('uuid');
 
 
 /**
@@ -48,8 +48,14 @@ function getUserData(req){
   var uaResult = parser.setUA(ua).getResult();
 
   return{
-    browser: [uaResult.browser.name, uaResult.browser.major],
-    os: [uaResult.os.name, uaResult.os.version],
+    browser: {
+      name: uaResult.browser.name,
+      version: uaResult.browser.major
+    },
+    os: {
+      name: uaResult.os.name,
+      version: uaResult.os.version
+    },
     date: dateTime(),
     origin: req.headers.origin
   }
@@ -93,34 +99,36 @@ let publicIpPromise = function(){
 
 router.post('/user', function(req, res){
   var data = req.body;
-  var user = getUserData(req);
+  var userData = getUserData(req);
+  var user = {};
 
   publicIpPromise()
   .then(function(data){
-    console.log(data);
-    user.ip = data;
+
   })
   .then(function(){
-    // do a search for user GUID
+    // do a search for user id
     // if it has the same ip, we have a match
-    
-    // else return a new guid
-    var guid = uuid.v1();
-
-
+    debugger
+    if(data.id && typeof data.id === "number"){
+      return db.query('SELECT * FROM users where id=$1', data.id);
+    }
+    else{
+      // else return a new id
+      return db.query(`INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('${userData.ip}', '${userData.browser.name}', 300, 700)`);
+    }
     // Fix this query
     // return db.query('SELECT * FROM users where ip=');
   })
-  .then(function(){
+  .then(function(data){
     // return db.query(`INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('127.0.0.1', 'chrome', 300, 700)`);
   })
   .then(function(data){
-    console.log(data);
     res.send({id: userData.ip})
   })
   .catch(function(err){
     res.send(err);
-    console.log('---', err);
+    console.error(err);
   })
 });
 
