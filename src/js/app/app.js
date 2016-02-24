@@ -9,7 +9,12 @@ import ajax from './ajax';
 
 
 class App extends React.Component {
+
     static propTypes = {
+    };
+
+    static defaultProps = {
+      btns: [1,2,3,4]
     };
 
     state = {
@@ -45,11 +50,19 @@ class App extends React.Component {
         );
       });
 
+      // var btns = this.props.btns.map(item =>{
+      //   return (
+      //     <button key={item}>Error {item}</button>
+      //   );
+      // });
+
+
         return(
           <div className="">
-            <h3>Testing</h3>
-            <button id="t1" onClick={this.doThis}>click here</button> to send user data
-            <br/><br/>
+            <button id="btn-1" onClick={this.doThis}>Error 1</button>
+            <button id="btn-2" onClick={this.doThis}>Error 2</button>
+            <button id="btn-3" onClick={this.doThis}>Error 3</button>
+            <button id="btn-4" onClick={this.doThis}>Error 4</button>
 
             <h1>Data print out</h1>
             {listItems}

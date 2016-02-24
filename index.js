@@ -114,7 +114,6 @@ router.post('/user', function(req, res, next){
 
     //UPTO
     // getting user id query to work
-    debugger
     if(reqb.id){
       var q = db.query('SELECT * FROM users where id=$1', reqb.id);
       return q;
@@ -137,9 +136,11 @@ router.post('/user', function(req, res, next){
   })
   .catch(function(err){
     if(err.code === "ECONNREFUSED"){
-      err.solution = 'Turn on Postgres';
+      err.errorDetails = 'Postgres has not been turned on';
     }
-    next(err);
+    if(err.message){
+      next(err);
+    }
   })
 });
 
