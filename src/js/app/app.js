@@ -23,7 +23,7 @@ class App extends React.Component {
         if(data.errno){
 
         }
-        else if(!data.error){
+        else if(!data.error && Array.isArray(data)){
            _this.setState({
             items: data
           });

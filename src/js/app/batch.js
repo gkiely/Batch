@@ -136,7 +136,6 @@ XMLHttpRequest.prototype.open = function(type, url) {
 // Init
 // ===============
 var user = store.get('BatchJS');
-debugger
 if(user && user.id){
   ajax.post('user', {id: user.id})
   .then(function(data){

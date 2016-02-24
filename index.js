@@ -13,7 +13,7 @@ var express    = require('express');
 var mongoose   = require('mongoose');
 var pgp        = require('pg-promise')();
 var publicIp   = require('public-ip');
-// var uuid       = require('uuid');
+var uuid       = require('uuid');
 
 
 /**
@@ -97,38 +97,49 @@ let publicIpPromise = function(){
 
 
 
-router.post('/user', function(req, res){
-  var data = req.body;
-  var userData = getUserData(req);
-  var user = {};
+router.post('/user', function(req, res, next){
+  var reqb      = req.body;
+  var userData  = getUserData(req);
+  var user      = {};
 
   publicIpPromise()
   .then(function(data){
-
   })
-  .then(function(){
-    // do a search for user id
+  .catch(function(err){
+    // >> log server error 
+  })
+  .then(function(data){
+    // do a search for user id 
     // if it has the same ip, we have a match
+
+    //UPTO
+    // getting user id query to work
     debugger
-    if(data.id && typeof data.id === "number"){
-      return db.query('SELECT * FROM users where id=$1', data.id);
+    if(reqb.id){
+      var q = db.query('SELECT * FROM users where id=$1', reqb.id);
+      return q;
     }
     else{
       // else return a new id
-      return db.query(`INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('${userData.ip}', '${userData.browser.name}', 300, 700)`);
+      user.id = uuid.v4();
     }
-    // Fix this query
-    // return db.query('SELECT * FROM users where ip=');
   })
   .then(function(data){
-    // return db.query(`INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('127.0.0.1', 'chrome', 300, 700)`);
+    if(data){
+      // Existing user
+    }
+    else{
+      return db.query(`INSERT INTO "users" (id, ip, browser, screenSizeX, screenSizeY) VALUES ('${user.id}', '${user.ip}', '${user.browser.name}', 300, 700)`);
+    }
   })
   .then(function(data){
     res.send({id: userData.ip})
   })
   .catch(function(err){
-    res.send(err);
-    console.error(err);
+    if(err.code === "ECONNREFUSED"){
+      err.solution = 'Turn on Postgres';
+    }
+    next(err);
   })
 });
 
@@ -198,7 +209,10 @@ router.delete('/logs/:id', function(req, res){
 
 
 app.use('/api', router);
-
+app.use(function(err, req, res, next){
+  console.error(err.stack);
+  res.status(500).send(err);
+})
 
 
 // app.post('/api', function(req, res){
