@@ -3,7 +3,7 @@
 
 
 -- CREATE TABLE users(
---   id BIGSERIAL primary key,
+--   id uuid primary key,
 --   ip cidr,
 --   browser text,
 --   screenSizeX int,
@@ -31,12 +31,15 @@
 -- drop table admin` CASCADE;
 -- drop table logs;
 
--- INSERT INTO "users" (ip, browser, screenSizeX, screenSizeY) VALUES ('127.0.0.1', 'chrome', 300, 700);
+-- INSERT INTO "users" (id, ip, browser, screenSizeX, screenSizeY) VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', '127.0.0.1', 'chrome', 300, 700);
 -- INSERT INTO "logs" (msg,website,stacktrace,webuserID) VALUES ('hi there', 'www.google.com', 'stacked', 4);
 
 
 -- \dt
--- select * from people limit 10;
-select * from users;
+-- select * from users;
 -- select * from logs limit 10;
+
+
 -- drop table logs;
+-- drop table users
+-- drop table admin

@@ -98,12 +98,12 @@ let publicIpPromise = function(){
 
 
 router.post('/user', function(req, res, next){
-  var reqb      = req.body;
-  var userData  = getUserData(req);
-  var user      = {};
+  let reqb      = req.body;
+  let user      = getUserData(req);
 
   publicIpPromise()
   .then(function(data){
+    user.ip = data;
   })
   .catch(function(err){
     // >> log server error 
@@ -115,24 +115,21 @@ router.post('/user', function(req, res, next){
     //UPTO
     // getting user id query to work
     if(reqb.id){
-      var q = db.query('SELECT * FROM users where id=$1', reqb.id);
-      return q;
-    }
-    else{
-      // else return a new id
-      user.id = uuid.v4();
+      return db.query('SELECT * FROM users where id=$1', reqb.id);
     }
   })
   .then(function(data){
     if(data){
       // Existing user
+      
     }
     else{
+      user.id = uuid.v4();
       return db.query(`INSERT INTO "users" (id, ip, browser, screenSizeX, screenSizeY) VALUES ('${user.id}', '${user.ip}', '${user.browser.name}', 300, 700)`);
     }
   })
   .then(function(data){
-    res.send({id: userData.ip})
+    res.send({id: user.id});
   })
   .catch(function(err){
     if(err.code === "ECONNREFUSED"){
