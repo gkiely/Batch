@@ -114,7 +114,7 @@ XMLHttpRequest.prototype.send = function(body) {
   this.addEventListener('load', function(d, a){
     if (this.status >= 200 && this.status < 400){
       // @todo: track this ajax request
-      Batch.log('BatchJS: ajax request received', this.responseText);
+      Batch.log('Batch: ajax request received', this.responseText);
     }
   });
   this.reallySend(body);
@@ -122,7 +122,7 @@ XMLHttpRequest.prototype.send = function(body) {
 
 XMLHttpRequest.prototype.reallyOpen = XMLHttpRequest.prototype.open;
 XMLHttpRequest.prototype.open = function(type, url) {
-  Batch.log('BatchJS: ajax started:', type + ',', 'url:', url);
+  Batch.log('Batch: ajax started:', type + ',', 'url:', url);
   this.reallyOpen(type, url);
 };
 
@@ -135,19 +135,21 @@ XMLHttpRequest.prototype.open = function(type, url) {
 // ===============
 // Init
 // ===============
-var user = store.get('BatchJS');
+var user = store.get('Batch');
 if(user && user.id){
   ajax.post('user', {id: user.id})
   .then(function(data){
     if(user.id === data.id){
-      // Existing user
-
+      //== Found user, no need to update user.id
+      console.log('Existing user');
     }
     else if(data.id){
-      store.set('user', {id: data.id})
+      //== Did not find/match in DB, updating
+      store.set('Batch', {id: data.id});
+      console.log('Added new user/new id');
     }
     else{
-      console.warn('no id returned from server');
+      console.warn('No id returned from server');
     }
   })
   .fail(function(err){
@@ -158,10 +160,11 @@ else{
   ajax.post('user')
   .then(function(data){
     if(data.id){
-      store.set('BatchJS', {id: data.id});
+      store.set('Batch', {id: data.id});
+      console.log('Added new user');
     }
     else{
-      console.warn('no id returned from server');
+      console.warn('No id returned from server for new user');
     }
   })
   .fail(function(err){
@@ -174,7 +177,7 @@ else{
  * Testing
  */
 if(gup('clean')){
-  store.remove('BatchJS');
+  store.remove('Batch');
 }
 
 if(gup('test')){

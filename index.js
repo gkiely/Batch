@@ -96,15 +96,44 @@ let publicIpPromise = function(){
 
 
 
-router.post('/user', function(req, res, next){
-  let reqb      = req.body;
-  let user      = getUserData(req);
+let handleExistingUser = function(data, res){
+    res.send({id: data.id});
+};
 
+let handleNewUser = function(req,res){
+  let user = getUserData(req);
+
+  return publicIpPromise()
+  .then(function(data){
+    user.ip = data;
+    user.id = uuid.v4();
+    return db.query(`INSERT INTO "users" (id, ip, browser, screenSizeX, screenSizeY) VALUES ('${user.id}', '${user.ip}', '${user.browser.name}', 300, 700)`);
+  })
+  .then(function(){
+    res.send({id: user.id});
+  })
+  .catch(function(err){
+    debugger
+    if(err.code === "ECONNREFUSED"){
+      err.errorDetails = 'Postgres has not been turned on';
+    }
+    if(err.message){
+      res.status(500).send(err);
+    }
+    console.error(err);
+    // >> log server error
+  })
+
+};
+
+
+router.post('/user', function(req, res, next){
+  let reqb = req.body;
 
   var query;
   if(reqb.id){
     // do a search for user id 
-    query = db.query('SELECT * FROM users where id=$1', reqb.id);
+    query = db.one('SELECT * FROM users where id=$1', reqb.id);
   }
   else{
     query = Promise.resolve();
@@ -112,50 +141,16 @@ router.post('/user', function(req, res, next){
 
 
   query.then(function(data){
+    if(data){
+      handleExistingUser(data, res);
+    }
+    else{
+      handleNewUser(req, res);
+    }
+  })
+  .catch(function(err){
+    next(err);
     debugger
-    if(data){
-
-    }
-    else{
-
-    }
-  })
-
-  publicIpPromise()
-  .then(function(data){
-    user.ip = data;
-  })
-  .catch(function(err){
-    // >> log server error 
-  })
-  .then(function(data){
-
-  })
-  .then(function(data){
-    if(data){
-      //== Existing user
-      user.id = data[0].id;
-    }
-    else{
-      //== New user
-      user.id = uuid.v4();
-      return db.query(`INSERT INTO "users" (id, ip, browser, screenSizeX, screenSizeY) VALUES ('${user.id}', '${user.ip}', '${user.browser.name}', 300, 700)`);
-    }
-  })
-  .then(function(){
-    //== User is in DB
-
-  })
-  .then(function(data){
-    res.send({id: user.id});
-  })
-  .catch(function(err){
-    if(err.code === "ECONNREFUSED"){
-      err.errorDetails = 'Postgres has not been turned on';
-    }
-    if(err.message){
-      next(err);
-    }
   })
 });
 
