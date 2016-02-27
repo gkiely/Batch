@@ -10,7 +10,6 @@ var dateTime   = new require('date-time');
 var cors       = require('cors');
 var bodyParser = require('body-parser');
 var express    = require('express');
-var mongoose   = require('mongoose');
 var pgp        = require('pg-promise')();
 var publicIp   = require('public-ip');
 var uuid       = require('uuid');
@@ -22,7 +21,7 @@ var uuid       = require('uuid');
 var app       = express();
 var router    = express.Router();
 var port      = 8001;
-var UAParser    = require('user-agent-parser');
+var UAParser    = require('ua-parser-js');
 var parser      = new UAParser();
 
 
@@ -101,6 +100,27 @@ router.post('/user', function(req, res, next){
   let reqb      = req.body;
   let user      = getUserData(req);
 
+
+  var query;
+  if(reqb.id){
+    // do a search for user id 
+    query = db.query('SELECT * FROM users where id=$1', reqb.id);
+  }
+  else{
+    query = Promise.resolve();
+  }
+
+
+  query.then(function(data){
+    debugger
+    if(data){
+
+    }
+    else{
+
+    }
+  })
+
   publicIpPromise()
   .then(function(data){
     user.ip = data;
@@ -109,24 +129,22 @@ router.post('/user', function(req, res, next){
     // >> log server error 
   })
   .then(function(data){
-    // do a search for user id 
-    // if it has the same ip, we have a match
 
-    //UPTO
-    // getting user id query to work
-    if(reqb.id){
-      return db.query('SELECT * FROM users where id=$1', reqb.id);
-    }
   })
   .then(function(data){
     if(data){
-      // Existing user
-      
+      //== Existing user
+      user.id = data[0].id;
     }
     else{
+      //== New user
       user.id = uuid.v4();
       return db.query(`INSERT INTO "users" (id, ip, browser, screenSizeX, screenSizeY) VALUES ('${user.id}', '${user.ip}', '${user.browser.name}', 300, 700)`);
     }
+  })
+  .then(function(){
+    //== User is in DB
+
   })
   .then(function(data){
     res.send({id: user.id});
