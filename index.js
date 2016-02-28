@@ -102,12 +102,14 @@ let handleExistingUser = function(data, res){
 
 let handleNewUser = function(req,res){
   let user = getUserData(req);
-
+  
   return publicIpPromise()
   .then(function(data){
     user.ip = data;
     user.id = uuid.v4();
-    return db.query(`INSERT INTO "users" (id, ip, browser, screenSizeX, screenSizeY) VALUES ('${user.id}', '${user.ip}', '${user.browser.name}', 300, 700)`);
+    return db.query('INSERT INTO users (id, ip, browser, screenSizeX, screenSizeY) VALUES ($1, $2, $3, $4, $5)', [
+      user.id, user.ip, user.browser.name, 300, 700
+    ])
   })
   .then(function(){
     res.send({id: user.id});
@@ -123,17 +125,19 @@ let handleNewUser = function(req,res){
     console.error(err);
     // >> log server error
   })
+};
 
+let findExistingUser = function(id){
+  return db.one('SELECT * FROM users where id=$1', id);
 };
 
 
 router.post('/user', function(req, res, next){
   let reqb = req.body;
-
   var query;
   if(reqb.id){
     // do a search for user id 
-    query = db.one('SELECT * FROM users where id=$1', reqb.id);
+    query = findExistingUser(reqb.id);
   }
   else{
     query = Promise.resolve();
@@ -156,11 +160,15 @@ router.post('/user', function(req, res, next){
 
 //-- Create/Insert
 router.post('/logs', function(req, res){
-  // console.log(req.body);
-  // var log = new Log(req.body);
-  // db.query(`INSERT INTO "people" (fname,lname,age,company) VALUES ('Stewart','George',42,'Metus Aliquam Erat Industries')`)
+  var guid = uuid.v4()
+  var reqb = req.body;
+  var query = findExistingUser(reqb.id);
 
-  db.query(`INSERT INTO "logs" (msg,website,stacktrace) VALUES ('hi there', 'www.google.com', 'stacked', 4)`)
+  query.then(function(data){
+    return db.query('INSERT INTO logs (id,msg,website,stacktrace, userid) VALUES ($1,$2, $3, $4)', [
+      guid, 'hi there', 'www.google.com', 'stacked', data.id
+    ]);
+  })
   .then(function(data){
     res.send(data);
   })
@@ -172,7 +180,6 @@ router.post('/logs', function(req, res){
 
 //-- Read
 router.get('/logs', function(req, res){
-
   db.query('select * from logs limit 10')
   .then(function(data){
     res.send(data);

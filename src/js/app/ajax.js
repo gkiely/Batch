@@ -4,7 +4,7 @@ import Batch from './batch';
 
 //-- Defaults
 var api = '//localhost:8001/api/';
-let options = {
+let defaultOptions = {
   type: 'GET',
   // dataType: 'json',
   success: function(res, text, jqXHR) {
@@ -17,20 +17,22 @@ let options = {
   }
 };
 
-let ajaxCall = function(url){
+let ajaxCall = function(url, options){
   options.url = api + url;
   return $.ajax(options);
 };
 
 let ajax = {
   get: function(url){
-    return ajaxCall(url);
+    let options = Object.create(defaultOptions);
+    return ajaxCall(url, options);
   },
   post: function(url, data){
+    let options = Object.create(defaultOptions);
     options.data = data || "";
-    options.type = "POST";
+    options.type = 'POST';
 
-    return ajaxCall(url);
+    return ajaxCall(url, options);
   }
 };
 

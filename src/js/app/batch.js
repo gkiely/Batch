@@ -43,19 +43,28 @@ let Batch = (function(win, doc, body){
      * @param  {string} str
      * @return {void}
      */
-    Batch._send = function(args, type, parse){
-      ajax.post('logs', type)
+    Batch._send = function(id, err){
+      ajax.post('logs', {id, err})
       .then(function(data){
-        Batch.log('yoooo', data);
-      });
+        if(data.name === "error"){
+          console.error(data);
+        }
+        else{
+          Batch.log('yoooo', data);
+        }
+      })
+      .fail(function(err){
+        console.error(err);
+      })
     };
 
 
     /*==================================
     =            Public API            =
     ==================================*/
+    Batch.user = {};
     Batch.error = function(str){
-      // this._send(str, 'error');
+      this._send(this.user.id, str);
     };
 
     Batch.warn = function(str){
@@ -85,7 +94,7 @@ let Batch = (function(win, doc, body){
  */
 
  window.addEventListener('error', function(e){
-   Batch.error(e);
+   // Batch.error(e);
  });
 
 let log = console.log;
@@ -106,7 +115,7 @@ console.warn = function(){
 
 console.error = function(){
     error.apply(this, Array.prototype.slice.call(arguments));
-    Batch.error(arguments[0], 'cerror');
+    // Batch.error(arguments[0], 'cerror');
 };
 
 XMLHttpRequest.prototype.reallySend = XMLHttpRequest.prototype.send;
@@ -135,15 +144,17 @@ XMLHttpRequest.prototype.open = function(type, url) {
 // ===============
 // Init
 // ===============
-var user = store.get('Batch');
+let user = store.get('Batch');
 if(user && user.id){
   ajax.post('user', {id: user.id})
   .then(function(data){
     if(user.id === data.id){
+      Batch.user = data;
       //== Found user, no need to update user.id
       console.log('Existing user');
     }
     else if(data.id){
+      Batch.user = data;
       //== Did not find/match in DB, updating
       store.set('Batch', {id: data.id});
       console.log('Added new user/new id');

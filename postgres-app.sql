@@ -11,12 +11,12 @@
 -- );
 
 -- CREATE TABLE logs(
---     id BIGSERIAL primary key,
+--     id uuid primary key,
 --     msg text,
 --     website text,
 --     logDate timestamp default current_timestamp,
 --     stacktrace text,
---     webuserID BIGSERIAL references users(id)
+--     userid uuid references users(id)
 -- );
 
 -- CREATE TABLE admin(
@@ -35,7 +35,7 @@
 -- INSERT INTO "logs" (msg,website,stacktrace,webuserID) VALUES ('hi there', 'www.google.com', 'stacked', 4);
 
 
--- \dt
+\dt
 -- select * from users;
 -- select * from logs limit 10;
 

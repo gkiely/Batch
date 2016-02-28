@@ -21,6 +21,7 @@ var fileInclude   = require('gulp-file-include'),
     gulpif        = require('gulp-if'),
     htmlmin       = function(){},
     minifyCSS     = function(){},
+    shell         = require('gulp-shell'),
     uglify        = function(){},
     yargs         = require('yargs');
 
@@ -38,6 +39,7 @@ var handleError = function(err) {
 ==============================*/
 gulp.task('server', function(){
   var ip = require('get-my-ip')();
+  //== Setup frontend dev server
   var stream = gulp.src(config.dist);
   stream.pipe(webserver());
   if(ip){
@@ -46,6 +48,13 @@ gulp.task('server', function(){
         livereload: true
     }));
   }
+
+  //== Setup nodejs server
+  stream.pipe(shell([
+    `nodemon --debug --ignore src/ --ignore dist/ --ignore test/ & 
+    node-inspector --preload false`
+  ]))
+
 });
 
 
