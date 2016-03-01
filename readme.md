@@ -1,4 +1,4 @@
-BatchJS
+Batch
 =================
 Fast, simple, JavaScript error tracker that runs on Node.js
 
