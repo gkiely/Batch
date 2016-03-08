@@ -61,22 +61,8 @@ gulp.task('server', function(){
 /*==================================
 =            JavaScript            =
 ==================================*/
-gulp.task('webpack:dev', function(cb){
-  var wpConfig = prod ? require('./webpack.prod.js') : require('./webpack.config.js');  
-  // wpConfig.entry = './src/js/app/App';
-  // wpConfig.output = {
-  //   filename: 'bundle.js',
-  //   path: config.js.dist
-  // };
-  // webpack(wpConfig, function(err, stats){
-  //   if(err) throw new gutil.PluginError("webpack", err);
-  //   else{
-  //     console.log('wepback updated successfully');
-  //   }
-  //   // gutil.log("[webpack]", stats.toString({
-  //   //     // output options
-  //   // }));
-  // });
+gulp.task('js', function(cb){
+  var wpConfig = prod ? require('./webpack.prod.js') : require('./webpack.config.js');
   
   wpConfig.output = {
     filename: 'bundle.js'
@@ -86,6 +72,7 @@ gulp.task('webpack:dev', function(cb){
   .pipe(webpackStream(wpConfig))
   .on('error', handleError)
   .pipe(gulp.dest(config.js.dist))
+  .pipe(livereload())
 });
 
 
@@ -109,8 +96,9 @@ gulp.task('html', function(){
 =============================*/
 gulp.task('watch', function(){
   livereload.listen();
-  gulp.watch([config.js.watch]).on('change', livereload.changed);
-  gulp.watch(config.html.watch, ['html']);  
+  gulp.watch(config.js.devwatch, ['js'])
+  // gulp.watch(config.js.watch).on('change', livereload.changed);
+  gulp.watch(config.html.watch, ['html']);
 });
 
 
@@ -120,8 +108,8 @@ gulp.task('watch', function(){
 =            CLI            =
 ===========================*/
 if(prod){
-  gulp.task('default', ['webpack:dev']);
+  gulp.task('default', ['js']);
 }
 else{
-  gulp.task('default', ['server', 'watch', 'webpack:dev']);  
+  gulp.task('default', ['server', 'watch', 'js']);  
 }

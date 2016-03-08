@@ -165,12 +165,12 @@ router.post('/logs', function(req, res){
   var query = findExistingUser(reqb.id);
 
   query.then(function(data){
-    return db.query('INSERT INTO logs (id,msg,website,stacktrace, userid) VALUES ($1,$2, $3, $4)', [
+    return db.query('INSERT INTO logs (id,msg,website,stacktrace, userid) VALUES ($1,$2, $3, $4, $5)', [
       guid, 'hi there', 'www.google.com', 'stacked', data.id
     ]);
   })
   .then(function(data){
-    res.send(data);
+    res.send({success: true});
   })
   .catch(function(err){
     res.send(err);

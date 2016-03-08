@@ -13,6 +13,7 @@ var config = {
   },
   js:{
     input: path.join(dir.src, 'js/app/App.js'),
+    devwatch: path.join(dir.src, 'js/**/*.js'),
     watch: path.join(dir.dist, 'js/**/*.js'),
     dist: join(dir.dist, 'js')
   },

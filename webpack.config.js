@@ -3,7 +3,6 @@ var webpack    = require('webpack');
 
  
 module.exports = {
-  watch: true,
   devtool: 'cheap-module-source-map',
   cached: true,
   cachedAssets: true,

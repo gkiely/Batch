@@ -7,6 +7,7 @@ import Batch from './batch';
 import ajax from './ajax';
 // import Promise from 'es6-promise';
 
+
 class App extends React.Component {
 
     static propTypes = {
@@ -16,8 +17,10 @@ class App extends React.Component {
       btns: [1,2,3,4]
     };
 
+    //== Initial State
     state = {
-      items:[]
+      items:    [],
+      inputTxt: ""
     };
 
     componentDidMount(){
@@ -35,6 +38,9 @@ class App extends React.Component {
       });
     }
 
+    /*=================================
+    =            Functions            =
+    =================================*/
     error1 = () => {
       Batch.error('asdf');
     };
@@ -54,37 +60,56 @@ class App extends React.Component {
       
     };
 
+    onChange = (e) => {
+      this.setState({inputTxt: e.target.value})
+    };
 
-    sendUserData(e){
-      e.preventDefault();
-    }
 
+
+
+
+
+    /*==============================
+    =            Render            =
+    ==============================*/
     render() {
       // console.log(this.state);
       var listItems = this.state.items.map(function(item){
         return (
-          <li key={item.id}>
-            {item.msg} - {item.logdate}
-          </li>
+          <tr key={item.id}>
+            <td>
+              {item.msg}
+            </td>
+            <td>
+              {item.logdate}
+            </td>
+          </tr>
         );
       });
-
-      // var btns = this.props.btns.map(item =>{
-      //   return (
-      //     <button key={item}>Error {item}</button>
-      //   );
-      // });
 
 
         return(
           <div className="">
-            <button id="btn-1" onClick={this.error1}>Error 1</button>
-            <button id="btn-2" onClick={this.error2}>Error 2</button>
-            <button id="btn-3" onClick={this.error3}>Error 3</button>
-            <button id="btn-4" onClick={this.error4}>Error 4</button>
 
-            <h1>Data print out</h1>
-            {listItems}
+            <input value={this.state.inputValue} onChange={this.onChange} />
+            <button id="btn-1" onClick={this.error1}>Error</button>
+            <button id="btn-2" onClick={this.error2}>Warn</button>
+            <button id="btn-3" onClick={this.error3}>Log</button>
+            
+
+            <p>&nbsp;</p><br/>
+            <h2>Example Admin section</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Message</th>
+                  <th>Log Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {listItems}
+              </tbody>
+            </table>
           </div>
         );
     }

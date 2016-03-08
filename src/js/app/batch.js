@@ -43,14 +43,14 @@ let Batch = (function(win, doc, body){
      * @param  {string} str
      * @return {void}
      */
-    Batch._send = function(id, err){
-      ajax.post('logs', {id, err})
+    Batch._send = function(data){
+      ajax.post('logs', data)
       .then(function(data){
         if(data.name === "error"){
           console.error(data);
         }
         else{
-          Batch.log('yoooo', data);
+          console.log(data);
         }
       })
       .fail(function(err){
@@ -63,8 +63,11 @@ let Batch = (function(win, doc, body){
     =            Public API            =
     ==================================*/
     Batch.user = {};
-    Batch.error = function(str){
-      this._send(this.user.id, str);
+    Batch.error = function(err){
+      this._send({
+        user: this.user.id,
+        err
+      });
     };
 
     Batch.warn = function(str){
