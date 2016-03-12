@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import Batch from './batch';
 
-
 //-- Defaults
 var api = '//localhost:8001/api/';
 let defaultOptions = {

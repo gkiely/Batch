@@ -4,8 +4,7 @@ var webpack    = require('webpack');
  
 module.exports = {
   devtool: 'cheap-module-source-map',
-  cached: true,
-  cachedAssets: true,
+  cache: true,
   // plugins:[
   //   new livereload()
   // ],

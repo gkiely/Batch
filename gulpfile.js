@@ -1,18 +1,19 @@
     // bulkSass      = require('gulp-sass-bulk-import'),
-    // cache         = require('gulp-cached'),
     // concat        = require('gulp-concat'),
     // eslint        = require('gulp-eslint'),
 
-var fileInclude   = require('gulp-file-include'),
+var 
+    // cache         = require('gulp-cached'),
     config        = require('./gulp-config.js'),
+    fileInclude   = require('gulp-file-include'),
     gulp          = require('gulp'),
     livereload    = require('gulp-livereload'),
     // prefix        = require('gulp-autoprefixer'),
     // react         = require('gulp-react'),
-    // remember      = require('gulp-remember');
+    // remember      = require('gulp-remember'),
     // sass          = require('gulp-sass'),
     // sourcemaps    = require('gulp-sourcemaps'),
-    gutil         = require('gulp-util');
+    // gutil         = require('gulp-util'),
     webserver     = require('gulp-webserver'),
     // webpack       = require('webpack'),
     webpackStream = require('webpack-stream'),
@@ -34,6 +35,14 @@ var handleError = function(err) {
 };
 
 
+//catches ctrl+c event
+// process.on('SIGINT', _ => {
+//   process.exit()
+// });
+
+
+
+
 /*==============================
 =            Server            =
 ==============================*/
@@ -53,8 +62,12 @@ gulp.task('server', function(){
   stream.pipe(shell([
     `nodemon --debug --ignore src/ --ignore dist/ --ignore test/ & 
     node-inspector --preload false`
-  ]))
+  ]));
 
+  //=== Start postgres
+  stream.pipe(shell([
+    'open -a Postgres'
+  ]));
 });
 
 
@@ -69,6 +82,9 @@ gulp.task('js', function(cb){
   };
   
   return gulp.src(config.js.input)
+  // .pipe(cache('scripts'))
+  // babel task here
+  // .pipe(remember('scripts'))
   .pipe(webpackStream(wpConfig))
   .on('error', handleError)
   .pipe(gulp.dest(config.js.dist))
