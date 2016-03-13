@@ -165,14 +165,25 @@ router.post('/logs', function(req, res){
   var query = findExistingUser(reqb.id);
 
   query.then(function(data){
-    return db.query('INSERT INTO logs (id,msg,website,stacktrace, userid) VALUES ($1,$2, $3, $4, $5)', [
-      guid, 'hi there', 'www.google.com', 'stacked', data.id
-    ]);
+    if(data){
+      //== User found 
+      //== Add log
+      return db.query('INSERT INTO logs (id,msg,website,stacktrace, userid) VALUES ($1,$2, $3, $4, $5)', [
+        guid, reqb.msg, 'www.google.com', 'stacked', data.id
+      ]);
+    }
+    else{
+      //@todo: handle user not found when posted log
+      //== User not found
+      //== Create new and add log
+    }
   })
   .then(function(data){
     res.send({success: true});
   })
   .catch(function(err){
+    //@todo: Log error to server
+
     res.send(err);
   })
 });

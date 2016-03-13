@@ -1,12 +1,11 @@
-// -- Libraries
-import React    from 'react';
-import ReactDOM from 'react-dom';
-import Component from './react-autobind';
+// == Libraries
+import Component from './react-autobind-component';
+import store from 'store';
 
-// -- App
+// == App
 import Batch from './batch';
 import ajax from './ajax';
-// import Promise from 'es6-promise';
+import clog from './clog';
 
 
 class App extends Component {
@@ -27,31 +26,41 @@ class App extends Component {
 
     componentDidMount(){
       var _this = this;
-      ajax.get('logs')
-      .then(function(data){
-        if(data.errno){
 
-        }
-        else if(!data.error && Array.isArray(data)){
+      ajax.get('logs')
+      .then(data => {
+        if(data){
            _this.setState({
             items: data
           });
         }
-      });
+      })
+      .catch(err => {
+        console.error(err)
+      })
     }
 
     /*=================================
     =            Functions            =
     =================================*/
-    error1(){
-      console.log(this.state.inputVal);
+    error(){
+      //== Replace All this with Batch.error() when it's working
+      //== As this is the users api
+      let user = store.get('Batch');
+      ajax.post('logs', {id: user.id, msg: this.state.inputVal})
+      .then(data => {
+        console.log('worked', data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
     };
 
-    error2(){
+    warn(){
 
     };
 
-    error3(){
+    log(){
 
     };
 
@@ -94,9 +103,9 @@ class App extends Component {
         <div className="">
 
           <input value={this.state.inputVal} onChange={this.onChange} />
-          <button id="btn-1" onClick={this.error1}>Error</button>
-          <button id="btn-2" onClick={this.error2}>Warn</button>
-          <button id="btn-3" onClick={this.error3}>Log</button>
+          <button id="btn-1" onClick={this.error}>Error</button>
+          <button id="btn-2" onClick={this.warn}>Warn</button>
+          <button id="btn-3" onClick={this.log}>Log</button>
           
 
           <p>&nbsp;</p><br/>

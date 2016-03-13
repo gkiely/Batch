@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import gup from './gup';
 import ajax from './ajax';
 import store from 'store';
@@ -166,7 +165,7 @@ if(user && user.id){
       console.warn('No id returned from server');
     }
   })
-  .fail(function(err){
+  .catch(function(err){
     console.error(err);
   });
 }
@@ -181,7 +180,7 @@ else{
       console.warn('No id returned from server for new user');
     }
   })
-  .fail(function(err){
+  .catch(function(err){
     console.error(err);
   })
 }

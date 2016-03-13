@@ -5,9 +5,14 @@ var webpack    = require('webpack');
 module.exports = {
   devtool: 'cheap-module-source-map',
   cache: true,
-  // plugins:[
-  //   new livereload()
-  // ],
+  plugins:[
+    new webpack.ProvidePlugin({
+      Promise: 'exports?global.Promise!es6-promise',
+      fetch: 'exports?self.fetch!whatwg-fetch',
+      React: 'react',
+      ReactDOM: 'react-dom'
+    })
+  ],
   module: {
     loaders: [
       {
