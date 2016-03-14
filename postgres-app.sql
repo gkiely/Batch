@@ -10,10 +10,13 @@
 --   screenSizeY int
 -- );
 
+-- Always use text
+-- http://blog.jonanin.com/2013/11/20/postgresql-char-varchar/
 -- CREATE TABLE logs(
 --     id uuid primary key,
 --     msg text,
---     website text,
+--     type text,
+--     url text,
 --     logDate timestamp default current_timestamp,
 --     stacktrace text,
 --     userid uuid references users(id)
@@ -35,9 +38,9 @@
 -- INSERT INTO "logs" (msg,website,stacktrace,webuserID) VALUES ('hi there', 'www.google.com', 'stacked', 4);
 
 
-\dt
+-- \dt
 -- select * from users where id='d86e510e-199a-4883-bde2-1a73f7287266';
-select * from logs limit 10;
+-- select * from logs limit 10;
 
 
 -- drop table logs;

@@ -42,7 +42,9 @@ let Batch = (function(win, doc, body){
      * @param  {string} str
      * @return {void}
      */
-    Batch._send = function(data){
+    Batch._sendOld = function(options){
+
+
       ajax.post('logs', data)
       .then(function(data){
         if(data.name === "error"){
@@ -57,16 +59,32 @@ let Batch = (function(win, doc, body){
       })
     };
 
+    Batch._send = function(options){
+      let user = store.get('Batch');
+      ajax.post('logs', {id: user.id, msg: this.state.inputVal, type: 'error', url: window.location.href})
+      .then(data => {
+        console.log('worked', data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    };
+
 
     /*==================================
     =            Public API            =
     ==================================*/
     Batch.user = {};
     Batch.error = function(err){
+      
+
+      // Seperate out ajax request so we jsut pass the msg, user.id and type
       this._send({
-        user: this.user.id,
-        err
+        type: 'error',
+        msg
       });
+
+
     };
 
     Batch.warn = function(str){

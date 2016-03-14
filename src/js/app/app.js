@@ -44,10 +44,11 @@ class App extends Component {
     =            Functions            =
     =================================*/
     error(){
+      // @todo
       //== Replace All this with Batch.error() when it's working
       //== As this is the users api
       let user = store.get('Batch');
-      ajax.post('logs', {id: user.id, msg: this.state.inputVal})
+      ajax.post('logs', {id: user.id, msg: this.state.inputVal, type: 'error', url: window.location.href})
       .then(data => {
         console.log('worked', data);
       })
@@ -88,12 +89,9 @@ class App extends Component {
       var listItems = this.state.items.map(function(item){
         return (
           <tr key={item.id}>
-            <td>
-              {item.msg}
-            </td>
-            <td>
-              {item.logdate}
-            </td>
+            <td>{item.msg}</td>
+            <td>{item.logdate}</td>
+            <td>{item.url}</td>
           </tr>
         );
       });
@@ -107,7 +105,6 @@ class App extends Component {
           <button id="btn-2" onClick={this.warn}>Warn</button>
           <button id="btn-3" onClick={this.log}>Log</button>
           
-
           <p>&nbsp;</p><br/>
           <h2>Example Admin section</h2>
           <table>
@@ -115,6 +112,7 @@ class App extends Component {
               <tr>
                 <th>Message</th>
                 <th>Log Date</th>
+                <th>URL</th>
               </tr>
             </thead>
             <tbody>

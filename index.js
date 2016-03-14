@@ -115,7 +115,6 @@ let handleNewUser = function(req,res){
     res.send({id: user.id});
   })
   .catch(function(err){
-    debugger
     if(err.code === "ECONNREFUSED"){
       err.errorDetails = 'Postgres has not been turned on';
     }
@@ -123,7 +122,7 @@ let handleNewUser = function(req,res){
       res.status(500).send(err);
     }
     console.error(err);
-    // >> log server error
+    //@todo: >> log server error
   })
 };
 
@@ -164,12 +163,13 @@ router.post('/logs', function(req, res){
   var reqb = req.body;
   var query = findExistingUser(reqb.id);
 
+
   query.then(function(data){
     if(data){
       //== User found 
       //== Add log
-      return db.query('INSERT INTO logs (id,msg,website,stacktrace, userid) VALUES ($1,$2, $3, $4, $5)', [
-        guid, reqb.msg, 'www.google.com', 'stacked', data.id
+      return db.query('INSERT INTO logs (id, msg, type, url, stacktrace, userid) VALUES ($1,$2, $3, $4, $5, $6)', [
+        guid, reqb.msg, reqb.type, reqb.url, 'stacked', data.id
       ]);
     }
     else{
