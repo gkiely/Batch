@@ -44,25 +44,17 @@ class App extends Component {
     =            Functions            =
     =================================*/
     error(){
-      // @todo
-      //== Replace All this with Batch.error() when it's working
-      //== As this is the users api
-      let user = store.get('Batch');
-      ajax.post('logs', {id: user.id, msg: this.state.inputVal, type: 'error', url: window.location.href})
-      .then(data => {
-        console.log('worked', data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+      // Generates error in the UI
+      Batch.error(this.state.inputVal);
     };
-
     warn(){
-
+      // Generates warning in the UI
+      Batch.warn(this.state.inputVal);
     };
 
     log(){
-
+      // Genereates log in the UI
+      Batch.log(this.state.inputVal);
     };
 
     error4(){
@@ -90,8 +82,9 @@ class App extends Component {
         return (
           <tr key={item.id}>
             <td>{item.msg}</td>
-            <td>{item.logdate}</td>
+            <td>{item.type}</td>
             <td>{item.url}</td>
+            <td>{item.logdate}</td>
           </tr>
         );
       });
@@ -100,19 +93,20 @@ class App extends Component {
       return(
         <div className="">
 
-          <input value={this.state.inputVal} onChange={this.onChange} />
+          <input value={this.state.inputVal} className="js-input" onChange={this.onChange} />
           <button id="btn-1" onClick={this.error}>Error</button>
           <button id="btn-2" onClick={this.warn}>Warn</button>
           <button id="btn-3" onClick={this.log}>Log</button>
           
           <p>&nbsp;</p><br/>
           <h2>Example Admin section</h2>
-          <table>
+          <table style={{width: '100%'}}>
             <thead>
               <tr>
                 <th>Message</th>
-                <th>Log Date</th>
+                <th>Error type</th>
                 <th>URL</th>
+                <th>Log Date</th>
               </tr>
             </thead>
             <tbody>
@@ -127,3 +121,4 @@ class App extends Component {
 
 
 ReactDOM.render(<App />, document.getElementById('App'));
+document.querySelector('.js-input').focus()

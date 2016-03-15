@@ -42,26 +42,14 @@ let Batch = (function(win, doc, body){
      * @param  {string} str
      * @return {void}
      */
-    Batch._sendOld = function(options){
-
-
-      ajax.post('logs', data)
-      .then(function(data){
-        if(data.name === "error"){
-          console.error(data);
-        }
-        else{
-          console.log(data);
-        }
-      })
-      .fail(function(err){
-        console.error(err);
-      })
-    };
-
     Batch._send = function(options){
       let user = store.get('Batch');
-      ajax.post('logs', {id: user.id, msg: this.state.inputVal, type: 'error', url: window.location.href})
+      ajax.post('logs', {
+        id: user.id,
+        msg: options.msg,
+        type: options.type, 
+        url: window.location.href
+      })
       .then(data => {
         console.log('worked', data);
       })
@@ -75,32 +63,25 @@ let Batch = (function(win, doc, body){
     =            Public API            =
     ==================================*/
     Batch.user = {};
-    Batch.error = function(err){
-      
-
-      // Seperate out ajax request so we jsut pass the msg, user.id and type
+    Batch.error = function(msg){
       this._send({
         type: 'error',
         msg
       });
-
-
     };
 
-    Batch.warn = function(str){
-      // this._send(str, 'warn');
+    Batch.warn = function(msg){
+      this._send({
+        type: 'warn',
+        msg
+      })
     };
 
-    Batch.log = function(str){
-      var arr = Array.prototype.slice.call(arguments);
-      if(debug){
-         log.apply(console, arr);
-      }
-      else{
-
-      }
-      // log('hi');
-      // this._send(str, 'log');
+    Batch.log = function(msg){
+      this._send({
+        type: 'log',
+        msg
+      })
     };
 
     return Batch;
@@ -124,13 +105,13 @@ let error = console.error;
 console.log = function(){
     var arr = Array.prototype.slice.call(arguments);
     log.apply(this, arr);
-    if(!debug){
-      Batch.log(JSON.stringify(arr), 'clog');
-    }
+    // if(!debug){
+    //   Batch.log(JSON.stringify(arr), 'clog');
+    // }
 };
 console.warn = function(){
     warn.apply(this, Array.prototype.slice.call(arguments));
-    Batch.warn(arguments[0], 'cwarn');
+    // Batch.warn(arguments[0], 'cwarn');
 };
 
 console.error = function(){
@@ -142,8 +123,7 @@ XMLHttpRequest.prototype.reallySend = XMLHttpRequest.prototype.send;
 XMLHttpRequest.prototype.send = function(body) {
   this.addEventListener('load', function(d, a){
     if (this.status >= 200 && this.status < 400){
-      // @todo: track this ajax request
-      Batch.log('Batch: ajax request received', this.responseText);
+      // Batch.log('Batch: ajax request received', this.responseText);
     }
   });
   this.reallySend(body);
@@ -151,7 +131,7 @@ XMLHttpRequest.prototype.send = function(body) {
 
 XMLHttpRequest.prototype.reallyOpen = XMLHttpRequest.prototype.open;
 XMLHttpRequest.prototype.open = function(type, url) {
-  Batch.log('Batch: ajax started:', type + ',', 'url:', url);
+  // Batch.log('Batch: ajax started:', type + ',', 'url:', url);
   this.reallyOpen(type, url);
 };
 
