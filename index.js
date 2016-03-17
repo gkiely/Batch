@@ -25,7 +25,7 @@ var UAParser    = require('ua-parser-js');
 var parser      = new UAParser();
 
 
-// Postgres
+//== Postgres settings
 var cn = {
   host: 'localhost',
   port: 5432,
@@ -39,10 +39,10 @@ var db = pgp(cn);
 
 
 
-/**
- * Methods
- */
-function getUserData(req){
+/*===============================
+=            Methods            =
+===============================*/
+let getUserData = function(req){
   var ua = req.headers['user-agent'];
   var uaResult = parser.setUA(ua).getResult();
 
@@ -58,33 +58,7 @@ function getUserData(req){
     date: dateTime(),
     origin: req.headers.origin
   }
-}
-
-
-
-/**
- * Server config
- */
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-
-
-
-
-/**
- * Routes/api
- */
-router.use(function(req, res, next){
-  console.log('Request received.');
-  next();
-});
-
-app.get('/', function(req, res){
-  res.json({msg: 'huzzaa'});
-});
+};
 
 let publicIpPromise = function(){
   return new Promise(function(resolve, reject){
@@ -93,8 +67,6 @@ let publicIpPromise = function(){
     });
   });
 };
-
-
 
 let handleExistingUser = function(data, res){
     res.send({id: data.id});
@@ -130,7 +102,38 @@ let findExistingUser = function(id){
   return db.one('SELECT * FROM users where id=$1', id);
 };
 
+// ==== End of Methods ====
 
+
+
+
+/*=====================================
+=            Server Config            =
+=====================================*/
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+
+
+
+/*==================================
+=            Routes/api            =
+==================================*/
+router.use(function(req, res, next){
+  console.log('Request received.');
+  next();
+});
+
+app.get('/', function(req, res){
+  res.json({msg: 'huzzaa'});
+});
+
+/**
+ * User verfiy
+ */
 router.post('/user', function(req, res, next){
   let reqb = req.body;
   var query;
@@ -153,11 +156,12 @@ router.post('/user', function(req, res, next){
   })
   .catch(function(err){
     next(err);
-    debugger
   })
 });
 
-//-- Create/Insert
+/**
+ * Create log
+ */
 router.post('/logs', function(req, res){
   var guid = uuid.v4()
   var reqb = req.body;
@@ -169,7 +173,7 @@ router.post('/logs', function(req, res){
       //== User found 
       //== Add log
       return db.query('INSERT INTO logs (id, msg, type, url, stacktrace, userid) VALUES ($1,$2, $3, $4, $5, $6)', [
-        guid, reqb.msg, reqb.type, reqb.url, 'stacked', data.id
+        guid, reqb.msg, reqb.type, reqb.url, reqb.stacktrace, data.id
       ]);
     }
     else{
@@ -189,7 +193,9 @@ router.post('/logs', function(req, res){
 });
 
 
-//-- Read
+/**
+ * Read logs
+ */
 router.get('/logs', function(req, res){
   db.query('select * from logs limit 10')
   .then(function(data){
@@ -200,7 +206,9 @@ router.get('/logs', function(req, res){
   });
 });
 
-//-- Read by id
+/**
+ * Read logs by id
+ */
 router.get('/logs/:id', function(req, res){
   db.query('select * from people where id=$1', req.params.id)
   .then(function(data){
@@ -211,7 +219,9 @@ router.get('/logs/:id', function(req, res){
   })
 });
 
-//-- Update
+/**
+ * Update log
+ */
 router.put('/logs/:id', function(req, res){
   // db.query('update logs set type="warn" where id=', req.params.id)
   // .then(function(data){
@@ -222,7 +232,9 @@ router.put('/logs/:id', function(req, res){
   // })
 });
 
-//-- Delete
+/**
+ * Delete log
+ */
 router.delete('/logs/:id', function(req, res){
   db.query('delete from people where id=$1', req.params.id)
   .then(function(data){
@@ -235,33 +247,20 @@ router.delete('/logs/:id', function(req, res){
 
 
 
+/*==============================
+=            Server            =
+==============================*/
 
-
+//== Bind router
 app.use('/api', router);
+
+//== Error handler
 app.use(function(err, req, res, next){
   console.error(err.stack);
   res.status(500).send(err);
 })
 
-
-// app.post('/api', function(req, res){
-  // console.log(req.body);
-  // console.log(getUserData(req));
-  //-- Payload
-  // req.body
-
-  
-  // res.json({status: 'saved'});
-  // res.end();
-// });
-
-
-
-
-
-/**
- * Launch server
- */
+//== Launch Server
 app.listen(port);
 console.log('Server started, listening on localhost:' + port);
 

@@ -17,10 +17,18 @@ let Batch = (function(win, doc, body){
     /*===================================
     =            Private API            =
     ===================================*/
+    //https://www.npmjs.com/package/stacktrace-js
+    //https://www.npmjs.com/package/stacktrace-parser
+
+    function getStackTrace(f) {
+      return !f ? [] : st2(f.caller).concat([f.toString().split('(')[0].substring(9) + '(' + f.arguments.join(',') + ')']);
+    }
+    
     Batch._stackTrace = function(e) {
-        var err = new Error(e);
+        let err = new Error(e);
+        let str;
         if(err.stack){
-          var str = err.stack.replace(/\n/, '')
+          str = err.stack.replace(/\n/, '')
           // .replace(/.*/, '')
           // .replace(/\n/, '')
           // .replace(/^\s*at\s/gm, '')
@@ -28,14 +36,9 @@ let Batch = (function(win, doc, body){
           // console.log(str);
         }
         else{
-          return "no stacktrace found";
+          str = getStackTrace(arguments.callee.caller);
         }
     }
-
-    Batch._track = function(){
-      if(debug){
-      }
-    };
 
     /**
      * Sends error string to server
@@ -48,7 +51,8 @@ let Batch = (function(win, doc, body){
         id: user.id,
         msg: options.msg,
         type: options.type, 
-        url: window.location.href
+        url: window.location.href,
+        stacktrace: options.stacktrace
       })
       .then(data => {
         console.log('worked', data);
@@ -57,6 +61,16 @@ let Batch = (function(win, doc, body){
         console.log(err);
       });
     };
+
+    Batch._windowError = function(err){
+      let stacktrace = this._stackTrace(err);
+      debugger
+      this._send({
+        type: 'windowError',
+        msg: err.msg, // @todo: get this val
+        stacktrace
+      })
+    }
 
 
     /*==================================
@@ -95,7 +109,7 @@ let Batch = (function(win, doc, body){
  */
 
  window.addEventListener('error', function(e){
-   // Batch.error(e);
+   Batch._windowError(e);
  });
 
 let log = console.log;
@@ -189,6 +203,10 @@ else{
  */
 if(gup('clean')){
   store.remove('Batch');
+}
+
+if(gup('error')){
+  causeError()
 }
 
 if(gup('test')){

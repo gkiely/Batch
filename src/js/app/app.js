@@ -37,7 +37,7 @@ class App extends Component {
       })
       .catch(err => {
         console.error(err)
-      })
+      });
     }
 
     /*=================================
@@ -68,11 +68,6 @@ class App extends Component {
       this.setState({inputVal: e.target.value})
     };
 
-
-
-
-
-
     /*==============================
     =            Render            =
     ==============================*/
@@ -93,7 +88,7 @@ class App extends Component {
       return(
         <div className="">
 
-          <input value={this.state.inputVal} className="js-input" onChange={this.onChange} />
+          <input value={this.state.inputVal} autoFocus ref="testInput" onChange={this.onChange} />
           <button id="btn-1" onClick={this.error}>Error</button>
           <button id="btn-2" onClick={this.warn}>Warn</button>
           <button id="btn-3" onClick={this.log}>Log</button>
@@ -121,4 +116,3 @@ class App extends Component {
 
 
 ReactDOM.render(<App />, document.getElementById('App'));
-document.querySelector('.js-input').focus()
