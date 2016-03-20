@@ -186,7 +186,7 @@ router.post('/logs', function(req, res){
     }
   })
   .then(function(data){
-    res.send({success: true});
+    res.send({success: true, msg: reqb.msg});
   })
   .catch(function(err){
     //@todo: Log error to server

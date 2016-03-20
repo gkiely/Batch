@@ -1,6 +1,7 @@
 import gup from './gup';
 import ajax from './ajax';
-import store from 'store';
+import Store from 'store';
+// import StackTrace from 'stacktrace-js';
 
 /**
  * Batch
@@ -17,28 +18,18 @@ let Batch = (function(win, doc, body){
     /*===================================
     =            Private API            =
     ===================================*/
+
     //https://www.npmjs.com/package/stacktrace-js
     //https://www.npmjs.com/package/stacktrace-parser
 
-    function getStackTrace(f) {
-      return !f ? [] : st2(f.caller).concat([f.toString().split('(')[0].substring(9) + '(' + f.arguments.join(',') + ')']);
-    }
-    
     Batch._stackTrace = function(e) {
-        let err = new Error(e);
-        let str;
-        if(err.stack){
-          str = err.stack.replace(/\n/, '')
-          // .replace(/.*/, '')
-          // .replace(/\n/, '')
-          // .replace(/^\s*at\s/gm, '')
-
-          // console.log(str);
-        }
-        else{
-          str = getStackTrace(arguments.callee.caller);
-        }
-    }
+      return {
+        col: e.colno,        
+        file: e.filename,
+        line: e.lineno,
+        msg: e.message,
+      }
+    };
 
     /**
      * Sends error string to server
@@ -46,7 +37,7 @@ let Batch = (function(win, doc, body){
      * @return {void}
      */
     Batch._send = function(options){
-      let user = store.get('Batch');
+      let user = Store.get('Batch');
       ajax.post('logs', {
         id: user.id,
         msg: options.msg,
@@ -64,7 +55,6 @@ let Batch = (function(win, doc, body){
 
     Batch._windowError = function(err){
       let stacktrace = this._stackTrace(err);
-      debugger
       this._send({
         type: 'windowError',
         msg: err.message, // @todo: get this val
@@ -158,7 +148,7 @@ XMLHttpRequest.prototype.open = function(type, url) {
 // ===============
 // Init
 // ===============
-let user = store.get('Batch');
+let user = Store.get('Batch');
 if(user && user.id){
   ajax.post('user', {id: user.id})
   .then(function(data){
@@ -170,7 +160,7 @@ if(user && user.id){
     else if(data.id){
       Batch.user = data;
       //== Did not find/match in DB, updating
-      store.set('Batch', {id: data.id});
+      Store.set('Batch', {id: data.id});
       console.log('Added new user/new id');
     }
     else{
@@ -185,7 +175,7 @@ else{
   ajax.post('user')
   .then(function(data){
     if(data.id){
-      store.set('Batch', {id: data.id});
+      Store.set('Batch', {id: data.id});
       console.log('Added new user');
     }
     else{
@@ -202,11 +192,13 @@ else{
  * Testing
  */
 if(gup('clean')){
-  store.remove('Batch');
+  Store.remove('Batch');
 }
 
 if(gup('error')){
-  causeError()
+  setTimeout(_ => {
+    causeError()
+  }, 2000);
 }
 
 if(gup('test')){
