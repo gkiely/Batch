@@ -1,10 +1,6 @@
-    // bulkSass      = require('gulp-sass-bulk-import'),
-    // concat        = require('gulp-concat'),
-    // eslint        = require('gulp-eslint'),
-
 var 
     // cache         = require('gulp-cached'),
-    config        = require('./gulp-config.js'),
+    config        = require('./gulp/gulp-config.js'),
     fileInclude   = require('gulp-file-include'),
     gulp          = require('gulp'),
     livereload    = require('gulp-livereload'),
@@ -25,6 +21,9 @@ var
     shell         = require('gulp-shell'),
     uglify        = function(){},
     yargs         = require('yargs');
+    // bulkSass      = require('gulp-sass-bulk-import'),
+    // concat        = require('gulp-concat'),
+    // eslint        = require('gulp-eslint'),
 
 
 var prod = yargs.argv.prod;
@@ -33,13 +32,6 @@ var handleError = function(err) {
   console.log(err.toString());
   this.emit('end');
 };
-
-
-//catches ctrl+c event
-// process.on('SIGINT', _ => {
-//   process.exit()
-// });
-
 
 
 
@@ -74,9 +66,9 @@ gulp.task('server', function(){
 /*==================================
 =            JavaScript            =
 ==================================*/
-var wpConfig = prod ? require('./webpack.prod.js') : require('./webpack.dev.js');
+var wpConfig = prod ? require('./gulp/webpack.prod.js') : require('./gulp/webpack.dev.js');
 gulp.task('js', function(cb){
-  
+
   wpConfig.output = {
     filename: 'bundle.js'
   };
