@@ -74,8 +74,8 @@ gulp.task('server', function(){
 /*==================================
 =            JavaScript            =
 ==================================*/
+var wpConfig = prod ? require('./webpack.prod.js') : require('./webpack.dev.js');
 gulp.task('js', function(cb){
-  var wpConfig = prod ? require('./webpack.prod.js') : require('./webpack.config.js');
   
   wpConfig.output = {
     filename: 'bundle.js'

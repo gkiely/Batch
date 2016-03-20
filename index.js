@@ -13,17 +13,13 @@ var express    = require('express');
 var pgp        = require('pg-promise')();
 var publicIp   = require('public-ip');
 var uuid       = require('uuid');
+var UAParser   = require('ua-parser-js');
 
 
 /**
- * Instances
+ * Settings
  */
-var app       = express();
-var router    = express.Router();
 var port      = 8001;
-var UAParser    = require('ua-parser-js');
-var parser      = new UAParser();
-
 
 //== Postgres settings
 var cn = {
@@ -34,7 +30,14 @@ var cn = {
   password: null
 };
 
-var db = pgp(cn);
+
+/**
+ * Instances
+ */
+var app         = express();
+var router      = express.Router();
+var parser      = new UAParser();
+var db          = pgp(cn);
 
 
 

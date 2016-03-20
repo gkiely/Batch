@@ -67,7 +67,7 @@ let Batch = (function(win, doc, body){
       debugger
       this._send({
         type: 'windowError',
-        msg: err.msg, // @todo: get this val
+        msg: err.message, // @todo: get this val
         stacktrace
       })
     }
