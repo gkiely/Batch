@@ -42,6 +42,12 @@ let checkStatus = function(res){
 
 
 let ajax = {
+  delete: function(url, id){
+    let options = {
+      method: 'delete'
+    };
+    return fetchJson(url + '/' + id, options)
+  },
   get: function(url){
     return fetchJson(url);
   },

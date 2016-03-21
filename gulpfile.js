@@ -57,9 +57,19 @@ gulp.task('server', function(){
   ]));
 
   //=== Start postgres
-  stream.pipe(shell([
-    'open -a Postgres'
-  ]));
+  var isWin = /^win/.test(process.platform);
+  if(isWin){
+    // @todo: get windows version working with config
+    // http://www.postgresql.org/docs/9.4/static/app-pg-ctl.html
+    stream.pipe(shell([
+      "%PROGRAMFILES%\PostgreSQL\9.5\bin\pg_ctl.exe -start"
+    ]));
+  }
+  else{
+    stream.pipe(shell([
+      'open -a Postgres'
+    ]));
+  }
 });
 
 

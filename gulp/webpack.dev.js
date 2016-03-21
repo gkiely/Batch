@@ -20,6 +20,7 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/,
         query: {
+          // plugins: ['jsx-html-class'], // Converts class to className, waiting on update: https://github.com/appfigures/jsx-html-class/issues/2
           presets: ['es2015', 'react', 'stage-0']
         }
       }

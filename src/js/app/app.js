@@ -20,6 +20,7 @@ class App extends Component {
     static propTypes = {
 
     };
+
     static defaultProps = {
       btns: [1,2,3,4]
     };
@@ -36,7 +37,7 @@ class App extends Component {
         }
       })
       .catch(err => {
-        console.error(err)
+        console.error(err);
       });
     }
 
@@ -46,40 +47,46 @@ class App extends Component {
     error(){
       // Generates error in the UI
       Batch.error(this.state.inputVal);
-    };
+    }
+
     warn(){
       // Generates warning in the UI
       Batch.warn(this.state.inputVal);
-    };
+    }
 
     log(){
       // Genereates log in the UI
       Batch.log(this.state.inputVal);
-    };
+    }
+
+    deleteLog(){
+    }
 
     error4(){
 
-    };
+    }
+
     error5(){
       
-    };
+    }
 
     onChange(e){
-      this.setState({inputVal: e.target.value})
-    };
+      this.setState({inputVal: e.target.value});
+    }
 
     /*==============================
     =            Render            =
     ==============================*/
     render() {
       // console.log(this.state);
-      var listItems = this.state.items.map(function(item){
+      let listItems = this.state.items.map(item => {
         return (
           <tr key={item.id}>
             <td>{item.msg}</td>
             <td>{item.type}</td>
             <td>{item.url}</td>
             <td>{item.logdate}</td>
+            <td class="hide"><button onClick={this.deleteLog}>X</button></td>
           </tr>
         );
       });
@@ -87,7 +94,6 @@ class App extends Component {
 
       return(
         <div className="">
-
           <input value={this.state.inputVal} autoFocus ref="testInput" onChange={this.onChange} />
           <button id="btn-1" onClick={this.error}>Error</button>
           <button id="btn-2" onClick={this.warn}>Warn</button>

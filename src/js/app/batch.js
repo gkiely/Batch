@@ -1,7 +1,6 @@
 import gup from './gup';
 import ajax from './ajax';
 import Store from 'store';
-// import StackTrace from 'stacktrace-js';
 
 /**
  * Batch
@@ -90,8 +89,6 @@ let Batch = (function(win, doc, body){
 
     return Batch;
 })(window, document, document.body);
-
-
 
 
 /**
