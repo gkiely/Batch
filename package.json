@@ -5,7 +5,7 @@
   "main": "",
   "licence": "MIT",
   "scripts": {
-    "start": ""
+    "start": "gulp"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,8 @@
     "gulp-uglify": "^1.0.1",
     "gulp-webserver": "^0.9.0",
     "imports-loader": "^0.6.5",
+    "node-inspector": "^0.12.7",
+    "nodemon": "^1.9.1",
     "webpack-livereload-plugin": "^0.6.0",
     "webpack-stream": "^3.1.0"
   },
