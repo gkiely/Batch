@@ -1,7 +1,7 @@
 dist
 dev
 node_modules
-bower_components
+notes/_notes.html
 .DS_Store
 *.sublime-workspace
 *.sublime-project

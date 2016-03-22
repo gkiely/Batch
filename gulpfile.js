@@ -10,6 +10,7 @@ var
     // sass          = require('gulp-sass'),
     // sourcemaps    = require('gulp-sourcemaps'),
     // gutil         = require('gulp-util'),
+    path          = require('path'),
     webserver     = require('gulp-webserver'),
     // webpack       = require('webpack'),
     webpackStream = require('webpack-stream'),
@@ -101,7 +102,7 @@ gulp.task('html', function(){
   return gulp.src(config.html.src)
   .pipe(fileInclude({
     prefix: '@@',
-    basepath: './src/html'
+    basepath: path.join(config.src, 'html')
   }))
   .on('error', handleError)
   .pipe(gulp.dest(config.dist))
@@ -126,7 +127,7 @@ gulp.task('watch', function(){
 =            CLI            =
 ===========================*/
 if(prod){
-  gulp.task('default', ['js']);
+  gulp.task('default', ['html', 'js']);
 }
 else{
   gulp.task('default', ['server', 'watch', 'js']);  
