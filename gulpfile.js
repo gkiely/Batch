@@ -41,17 +41,21 @@ var handleError = function(err) {
 ==============================*/
 gulp.task('server', function(){
   var ip = require('get-my-ip')();
-  //== Setup frontend dev server
-  var stream = gulp.src(config.dist);
-  stream.pipe(webserver());
+  var stream = gulp.src('');
+  
+
+  //=== Client testing server
+  var client = gulp.src('dist');
+  client.pipe(webserver());
   if(ip){
-    stream.pipe(webserver({
+    client.pipe(webserver({
         host: ip,
         livereload: true
     }));
   }
 
-  //== Setup nodejs server
+
+  //== nodejs server (client/admin)
   stream.pipe(shell([
     `nodemon --debug --ignore src/ --ignore dist/ --ignore test/ & 
     node-inspector --preload false`
