@@ -134,5 +134,5 @@ if(prod){
   gulp.task('default', ['html', 'js']);
 }
 else{
-  gulp.task('default', ['server', 'watch', 'js']);  
+  gulp.task('default', ['server', 'watch', 'js', 'html']);  
 }

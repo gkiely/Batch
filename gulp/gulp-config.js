@@ -2,8 +2,8 @@ var path = require('path');
 var join = path.join;
 
 var dir = {
-  src: 'src/client',
-  dist: 'dist/client'
+  src: 'src',
+  dist: 'dist'
 };
 
 var config = {
