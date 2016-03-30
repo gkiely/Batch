@@ -19,7 +19,7 @@ var UAParser   = require('ua-parser-js');
 /**
  * Settings
  */
-var port      = 8001;
+var port      = 8002;
 
 //== Postgres settings
 var cn = {
@@ -200,7 +200,7 @@ router.post('/logs', function(req, res){
  * Read logs
  */
 router.get('/logs', function(req, res){
-  db.query('select * from logs limit 10')
+  db.query('select * from logs')
   .then(function(data){
     res.send(data);
   })
@@ -213,7 +213,7 @@ router.get('/logs', function(req, res){
  * Read logs by id
  */
 router.get('/logs/:id', function(req, res){
-  db.query('select * from people where id=$1', req.params.id)
+  db.query('select * from logs where id=$1', req.params.id)
   .then(function(data){
     res.send(data);
   })
@@ -235,11 +235,17 @@ router.put('/logs/:id', function(req, res){
   // })
 });
 
+
+
+
+/*=====================================
+=            Admin Section            =
+=====================================*/
 /**
  * Delete log
  */
 router.delete('/logs/:id', function(req, res){
-  db.query('delete from people where id=$1', req.params.id)
+  db.query('delete from logs where id=$1', req.params.id)
   .then(function(data){
     res.send(data);
   })
@@ -247,6 +253,21 @@ router.delete('/logs/:id', function(req, res){
     res.send(err);
   })
 });
+
+router.delete('/logs', function(req, res){
+  db.query('delete from logs')
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.send(err);
+  })
+});
+
+
+
+// ==== End of Admin ====
+
 
 
 

@@ -38,7 +38,8 @@
 -- INSERT INTO "logs" (msg,website,stacktrace,webuserID) VALUES ('hi there', 'www.google.com', 'stacked', 4);
 
 
--- \dt
+\dt
+-- delete from logs
 -- select * from users where id='d86e510e-199a-4883-bde2-1a73f7287266';
 -- select * from logs limit 10;
 

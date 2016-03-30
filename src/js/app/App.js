@@ -86,7 +86,7 @@ class App extends Component {
             <td>{item.type}</td>
             <td>{item.url}</td>
             <td>{item.logdate}</td>
-            <td class="hide"><button onClick={this.deleteLog}>X</button></td>
+            <td className="hide"><button onClick={this.deleteLog}>X</button></td>
           </tr>
         );
       });
@@ -94,26 +94,58 @@ class App extends Component {
 
       return(
         <div className="">
-          <input value={this.state.inputVal} autoFocus ref="testInput" onChange={this.onChange} />
-          <button id="btn-1" onClick={this.error}>Error</button>
-          <button id="btn-2" onClick={this.warn}>Warn</button>
-          <button id="btn-3" onClick={this.log}>Log</button>
+          <div>
+            <h1>Client Section</h1>
+            <input value={this.state.inputVal} autoFocus ref="testInput" onChange={this.onChange} />
+            <button id="btn-1" onClick={this.error}>Error</button>
+            <button id="btn-2" onClick={this.warn}>Warn</button>
+            <button id="btn-3" onClick={this.log}>Log</button>
+          </div>
+          <br/>
+          <hr style={{opacity: 0.3}} />
+
+
+          <h1>Admin section</h1>
           
-          <p>&nbsp;</p><br/>
-          <h2>Example Admin section</h2>
-          <table style={{width: '100%'}}>
-            <thead>
-              <tr>
-                <th>Message</th>
-                <th>Error type</th>
-                <th>URL</th>
-                <th>Log Date</th>
-              </tr>
-            </thead>
-            <tbody>
-                {listItems}
-            </tbody>
-          </table>
+
+          <h3>Card Components</h3>
+
+          <div className="component">
+            Errors this week: 52
+          </div>
+
+          <div className="component">
+            Errors per page view: 0.79
+          </div>
+
+          <div className="component">
+            New errors this week: 25
+          </div>
+
+          <h3>Graph component</h3>
+          <div className="component">
+            Errors/Page views
+            >> Graph data
+          </div>
+
+
+          <h3>Table Component - top 5 errors</h3>
+          <div className="component">
+            <table style={{width: '100%'}}>
+              <thead>
+                <tr>
+                  <th>Message</th>
+                  <th>Error type</th>
+                  <th>URL</th>
+                  <th>Log Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {listItems}
+              </tbody>
+            </table>
+          </div>
+
         </div>
       );
     }

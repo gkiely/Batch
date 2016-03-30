@@ -1,8 +1,6 @@
 dist
-dev
 node_modules
 notes/_notes.html
-admin
 .DS_Store
 *.sublime-workspace
 *.sublime-project

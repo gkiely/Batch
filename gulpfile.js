@@ -1,4 +1,5 @@
 var 
+    babel         = require('gulp-babel'),
     // cache         = require('gulp-cached'),
     config        = require('./gulp/gulp-config.js'),
     fileInclude   = require('gulp-file-include'),
@@ -7,8 +8,9 @@ var
     // prefix        = require('gulp-autoprefixer'),
     // react         = require('gulp-react'),
     // remember      = require('gulp-remember'),
-    // sass          = require('gulp-sass'),
-    // sourcemaps    = require('gulp-sourcemaps'),
+    // rollup        = require('gulp-rollup'),
+    sass          = require('gulp-sass'),
+    sourcemaps    = require('gulp-sourcemaps'),
     // gutil         = require('gulp-util'),
     path          = require('path'),
     webserver     = require('gulp-webserver'),
@@ -82,8 +84,7 @@ gulp.task('server', function(){
 =            JavaScript            =
 ==================================*/
 var wpConfig = prod ? require('./gulp/webpack.prod.js') : require('./gulp/webpack.dev.js');
-gulp.task('js', function(cb){
-
+gulp.task('js:old', function(cb){
   wpConfig.output = {
     filename: 'bundle.js'
   };
@@ -97,6 +98,12 @@ gulp.task('js', function(cb){
   .pipe(gulp.dest(config.js.dist))
   .pipe(livereload())
 });
+
+gulp.task('js', function(){
+  return gulp.src(config.js.input, {read: false})
+  
+  .pipe(sourcemaps.write('.'))
+})
 
 
 /*============================
