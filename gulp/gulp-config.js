@@ -1,26 +1,26 @@
 var path = require('path');
 var join = path.join;
 
-var dir = {
-  src: 'src',
-  dist: 'dist'
-};
+var src = 'src';
+var dist = 'dist';
 
 var config = {
-  src: dir.src,
-  dist: dir.dist,
-  css:{
-
+  src: src,
+  dist: dist,
+  html:{
+    src: [join(src, 'html/pages/*.html'), join(src, 'html/testing/**/*.html')],
+    watch: join(src, 'html/**/*.html' )
   },
   js:{
-    input: join(dir.src, 'js/app/App.js'),
-    devwatch: join(dir.src, 'js/**/*.js'),
-    watch: join(dir.dist, 'js/**/*.js'),
-    dist: join(dir.dist, 'js')
+    input: join(src, 'js/app/App.js'),
+    devwatch: join(src, 'js/**/*.js'),
+    watch: join(dist, 'js/**/*.js'),
+    dist: join(dist, 'js')
   },
-  html:{
-    src: [join(dir.src, 'html/pages/*.html'), join(dir.src, 'html/testing/**/*.html')],
-    watch: join(dir.src, 'html/**/*.html' )
+  sass:{
+    src: join(src, 'sass/*.scss'),
+    dist: join(dist, 'css'),
+    watch: join(src, 'sass/**/*.scss')
   }
 };
 

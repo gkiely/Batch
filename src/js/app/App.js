@@ -100,7 +100,11 @@ class App extends Component {
             <button id="btn-1" onClick={this.error}>Error</button>
             <button id="btn-2" onClick={this.warn}>Warn</button>
             <button id="btn-3" onClick={this.log}>Log</button>
+
+            <a className="Client__sign-in" href="#">Sign in</a>
           </div>
+
+
           <br/>
           <hr style={{opacity: 0.3}} />
 

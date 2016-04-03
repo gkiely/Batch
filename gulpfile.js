@@ -5,7 +5,7 @@ var
     fileInclude   = require('gulp-file-include'),
     gulp          = require('gulp'),
     livereload    = require('gulp-livereload'),
-    // prefix        = require('gulp-autoprefixer'),
+    prefix        = require('gulp-autoprefixer'),
     // react         = require('gulp-react'),
     // remember      = require('gulp-remember'),
     // rollup        = require('gulp-rollup'),
@@ -23,8 +23,8 @@ var
     minifyCSS     = function(){},
     shell         = require('gulp-shell'),
     uglify        = function(){},
-    yargs         = require('yargs');
-    // bulkSass      = require('gulp-sass-bulk-import'),
+    yargs         = require('yargs'),
+    bulkSass      = require('gulp-sass-bulk-import');
     // concat        = require('gulp-concat'),
     // eslint        = require('gulp-eslint'),
 
@@ -80,32 +80,6 @@ gulp.task('server', function(){
 });
 
 
-/*==================================
-=            JavaScript            =
-==================================*/
-var wpConfig = prod ? require('./gulp/webpack.prod.js') : require('./gulp/webpack.dev.js');
-gulp.task('js:old', function(cb){
-  wpConfig.output = {
-    filename: 'bundle.js'
-  };
-  
-  return gulp.src(config.js.input)
-  // .pipe(cache('scripts'))
-  // babel task here
-  // .pipe(remember('scripts'))
-  .pipe(webpackStream(wpConfig))
-  .on('error', handleError)
-  .pipe(gulp.dest(config.js.dist))
-  .pipe(livereload())
-});
-
-gulp.task('js', function(){
-  return gulp.src(config.js.input, {read: false})
-  
-  .pipe(sourcemaps.write('.'))
-})
-
-
 /*============================
 =            HTML            =
 ============================*/
@@ -121,6 +95,54 @@ gulp.task('html', function(){
 });
 
 
+
+/*==================================
+=            JavaScript            =
+==================================*/
+var wpConfig = prod ? require('./gulp/webpack.prod.js') : require('./gulp/webpack.dev.js');
+gulp.task('js', function(cb){
+  wpConfig.output = {
+    filename: 'bundle.js'
+  };
+  
+  return gulp.src(config.js.input)
+  // .pipe(cache('scripts'))
+  // babel task here
+  // .pipe(remember('scripts'))
+  .pipe(webpackStream(wpConfig))
+  .on('error', handleError)
+  .pipe(gulp.dest(config.js.dist))
+  .pipe(livereload())
+});
+
+// gulp.task('js', function(){
+//   return gulp.src(config.js.input, {read: false})
+  
+//   .pipe(sourcemaps.write('.'))
+// })
+
+
+
+/*============================
+=            Sass            =
+============================*/
+gulp.task('sass', function(){
+  return gulp.src(config.sass.src)
+  .pipe(bulkSass())
+  .pipe(sourcemaps.init())
+  .pipe(sass( {style:'compressed', precision: 10} ))
+  .on('error', handleError)
+  .pipe(prefix())
+  .on('error', handleError)
+  .pipe(sourcemaps.write('.'))
+  .pipe(gulp.dest(config.sass.dist))
+  .pipe(livereload())
+});
+
+
+
+
+
 /*=============================
 =            Watch            =
 =============================*/
@@ -129,6 +151,7 @@ gulp.task('watch', function(){
   gulp.watch(config.js.devwatch, ['js'])
   // gulp.watch(config.js.watch).on('change', livereload.changed);
   gulp.watch(config.html.watch, ['html']);
+  gulp.watch(config.sass.watch, ['sass']);
 });
 
 
