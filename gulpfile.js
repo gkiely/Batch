@@ -117,7 +117,7 @@ gulp.task('js', function(cb){
 
 // gulp.task('js', function(){
 //   return gulp.src(config.js.input, {read: false})
-  
+//   .pipe(rollup())
 //   .pipe(sourcemaps.write('.'))
 // })
 
@@ -136,7 +136,6 @@ gulp.task('sass', function(){
   .on('error', handleError)
   .pipe(sourcemaps.write('.'))
   .pipe(gulp.dest(config.sass.dist))
-  .pipe(livereload())
 });
 
 
@@ -152,6 +151,7 @@ gulp.task('watch', function(){
   // gulp.watch(config.js.watch).on('change', livereload.changed);
   gulp.watch(config.html.watch, ['html']);
   gulp.watch(config.sass.watch, ['sass']);
+  gulp.watch(config.sass.dist + '/**/*.css').on('change', livereload.changed);
 });
 
 

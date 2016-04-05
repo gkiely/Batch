@@ -1,11 +1,11 @@
 // == Libraries
-import Component from './react-autobind-component';
+import Component from './lib/react-autobind-component';
 import store from 'store';
 
 // == App
 import Batch from './batch';
-import ajax from './ajax';
-import clog from './clog';
+import ajax from './lib/ajax';
+import clog from './lib/clog';
 
 
 class App extends Component {
@@ -39,6 +39,7 @@ class App extends Component {
       .catch(err => {
         console.error(err);
       });
+
     }
 
     /*=================================
@@ -94,19 +95,18 @@ class App extends Component {
 
       return(
         <div className="">
-          <div>
+
+          <div ref="clientSection">
             <h1>Client Section</h1>
             <input value={this.state.inputVal} autoFocus ref="testInput" onChange={this.onChange} />
             <button id="btn-1" onClick={this.error}>Error</button>
             <button id="btn-2" onClick={this.warn}>Warn</button>
             <button id="btn-3" onClick={this.log}>Log</button>
 
-            <a className="Client__sign-in" href="#">Sign in</a>
+            <a className="Client__signIn" href="?admin=true">Sign in</a>
+            <br/>
+            <hr style={{opacity: 0.3}} />
           </div>
-
-
-          <br/>
-          <hr style={{opacity: 0.3}} />
 
 
           <h1>Admin section</h1>

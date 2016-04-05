@@ -1,5 +1,5 @@
-import gup from './gup';
-import ajax from './ajax';
+import gup from './lib/gup';
+import ajax from './lib/ajax';
 import Store from 'store';
 
 /**
