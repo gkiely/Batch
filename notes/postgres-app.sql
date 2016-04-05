@@ -43,6 +43,10 @@
 -- select * from users where id='d86e510e-199a-4883-bde2-1a73f7287266';
 -- select * from logs limit 10;
 
+-- select url, logdate, type from logs limit 10;
+
+select url, logdate, type from logs where logdate >= '2016-04-1';
+
 
 -- drop table logs;
 -- drop table users

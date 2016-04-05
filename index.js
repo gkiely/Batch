@@ -200,7 +200,14 @@ router.post('/logs', function(req, res){
  * Read logs
  */
 router.get('/logs', function(req, res){
-  db.query('select * from logs')
+  let reqb = req.body;
+  let query;
+
+
+  //-- Get all logs
+  query = db.query("select * from logs limit 100");
+
+  query
   .then(function(data){
     res.send(data);
   })
@@ -208,6 +215,32 @@ router.get('/logs', function(req, res){
     res.send(err);
   });
 });
+
+
+router.post('/logs/date', function(req, res){
+  let reqb = req.body;
+  let query;
+
+  //-- Get logs by date range
+  if(reqb.startDate && reqb.endDate){
+    query = db.query("select * from logs where logdate >=$1 AND logdate <=$2 limit 100", reqb.startDate, reqb.endDate);
+  }
+  else if(reqb.startDate){
+    query = db.query("select * from logs where logdate >=$1 limit 100", reqb.startDate);
+  }
+  else if(reqb.endDate){
+    query = db.query("select * from logs where logdate <=$1 limit 100", reqb.endDate);
+  }
+
+  query
+  .then(function(data){
+    res.send(data);
+  })
+  .catch(function(err){
+    res.send(err);
+  });
+});
+
 
 /**
  * Read logs by id

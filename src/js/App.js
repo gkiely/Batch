@@ -40,6 +40,16 @@ class App extends Component {
         console.error(err);
       });
 
+
+      ajax.post('logs/date', {startDate: ''})
+      .then(data => {
+        if(data){
+          _this.setState({
+            errorsLastWeek: data
+          })
+        }
+      });
+
     }
 
     /*=================================
