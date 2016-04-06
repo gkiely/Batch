@@ -32,9 +32,10 @@ let checkStatus = function(res){
     return res
   }
   else {
-    var error = new Error(res.statusText)
-    error.res = res
-    throw error;
+    // var error = new Error(res.statusText)
+    // error.res = res
+    // throw error;
+    return res;
   }
 };
 

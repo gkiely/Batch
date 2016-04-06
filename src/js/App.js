@@ -44,11 +44,16 @@ class App extends Component {
       ajax.post('logs/date', {startDate: ''})
       .then(data => {
         if(data){
+          console.log(data);
           _this.setState({
             errorsLastWeek: data
           })
         }
-      });
+      })
+      .catch(function(e){
+        debugger
+        console.log(e);
+      })
 
     }
 
@@ -108,7 +113,7 @@ class App extends Component {
 
           <div ref="clientSection">
             <h1>Client Section</h1>
-            <input value={this.state.inputVal} autoFocus ref="testInput" onChange={this.onChange} />
+            <input value={this.state.inputVal} ref="testInput" onChange={this.onChange} />
             <button id="btn-1" onClick={this.error}>Error</button>
             <button id="btn-2" onClick={this.warn}>Warn</button>
             <button id="btn-3" onClick={this.log}>Log</button>

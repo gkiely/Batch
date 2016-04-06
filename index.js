@@ -231,14 +231,18 @@ router.post('/logs/date', function(req, res){
   else if(reqb.endDate){
     query = db.query("select * from logs where logdate <=$1 limit 100", reqb.endDate);
   }
+  else{
+    res.status(500)
+    .send({data: 'No startDate or endDate passed to logs/date'})
+  }
 
-  query
-  .then(function(data){
-    res.send(data);
-  })
-  .catch(function(err){
-    res.send(err);
-  });
+  // query
+  // .then(function(data){
+  //   res.send(data);
+  // })
+  // .catch(function(err){
+  //   res.send(err);
+  // });
 });
 
 
