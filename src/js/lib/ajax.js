@@ -11,34 +11,22 @@ let fetchJson = function(url, options){
   url = api + url;
   return fetch(url, options)
   .then(checkStatus)
-  .then(res => res.json())
-
-  // Old way that added data to res object
-  // .then(res => {
-  //   return res.json()
-  //   .then(data => {
-  //     res.data = data;
-  //     return res;
-  //   });
-  // });
 };
-
 
 /**
  * Add server error detection to fetch api
  */
 let checkStatus = function(res){
   if (res.status >= 200 && res.status < 300) {
-    return res
+    return res.json();
   }
-  else {
-    // var error = new Error(res.statusText)
-    // error.res = res
-    // throw error;
-    return res;
+  else{
+    return res.json()
+    .then(function(data){
+      throw new Error(data.message);
+    });
   }
 };
-
 
 
 

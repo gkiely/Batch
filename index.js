@@ -233,7 +233,7 @@ router.post('/logs/date', function(req, res){
   }
   else{
     res.status(500)
-    .send({data: 'No startDate or endDate passed to logs/date'})
+    .send({message: 'No startDate or endDate passed to logs/date'})
   }
 
   // query

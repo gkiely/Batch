@@ -51,8 +51,7 @@ class App extends Component {
         }
       })
       .catch(function(e){
-        debugger
-        console.log(e);
+        console.error(e);
       })
 
     }
