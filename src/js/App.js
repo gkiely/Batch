@@ -9,6 +9,7 @@ import ajax from './lib/ajax';
 // import clog from './lib/clog';
 
 
+
 class App extends Component {
     constructor(props){
       super(props);
@@ -37,9 +38,6 @@ class App extends Component {
           });
         }
       })
-      .catch(err => {
-        console.error(err);
-      });
 
       var startDate = moment().subtract(7, 'days').format();
 
@@ -48,13 +46,28 @@ class App extends Component {
         if(data){
           _this.setState({
             errorsThisWeek: data.length
+          });
+        }
+      })
+
+      ajax.post('logs/perPage', {startDate})
+      .then(data => {
+        if(data){
+          _this.setState({
+            errorsPerPage: data.length
+          });
+        }
+      });
+
+      ajax.post('logs/newErrors', {startDate})
+      .then(data =>{
+        if(data){
+          console.log(data);
+          _this.setState({
+            newErrors: data.length
           })
         }
       })
-      .catch(function(e){
-        console.error(e);
-      })
-
     }
 
     /*=================================
@@ -130,15 +143,15 @@ class App extends Component {
           <h3>Card Components</h3>
 
           <div className="component">
-            Errors this week: {this.state.errorsThisWeek}
+            Errors (this week): {this.state.errorsThisWeek}
           </div>
 
           <div className="component">
-            Errors per page view: 0.79
+            Errors per page (this week): {this.state.errorsThisWeek / this.state.errorsPerPage}
           </div>
 
           <div className="component">
-            New errors this week: 25
+            New errors (this week): {this.state.newErrors}
           </div>
 
           <h3>Graph component</h3>

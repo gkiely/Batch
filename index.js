@@ -3,9 +3,7 @@
 /**
  * Modules
  */
-var http       = require('http');
-var path       = require('path');
-var path       = require('path');
+// var path       = require('path');
 var dateTime   = new require('date-time');
 var cors       = require('cors');
 var bodyParser = require('body-parser');
@@ -106,13 +104,20 @@ let findExistingUser = function(id){
   return db.one('SELECT * FROM users where id=$1', id);
 };
 
-let handleError = function(res, msg, code){
-  if(!code){
-    code = 500;
-  }
+let handleQuery = function(query, res){
+  return query
+  .then(function(data){
+    res.send(data);
+  })
+  .catch(e => {
+    fireError(res, e.message);
+  });
+};
+
+let fireError = function(res, msg, code = 500){
   res.status(code)
   .send({message: msg})
-}
+};
 
 // ==== End of Methods ====
 
@@ -209,9 +214,7 @@ router.post('/logs', function(req, res){
  * Read logs
  */
 router.get('/logs', function(req, res){
-  let reqb = req.body;
   let query;
-
 
   //-- Get all logs
   query = db.query("select * from logs limit 100");
@@ -230,29 +233,72 @@ router.post('/logs/date', function(req, res){
   let reqb = req.body;
   let query;
 
-
   //-- Get logs by date range
   if(reqb.startDate && reqb.endDate){
-    query = db.query("select * from logs where logdate >=$1 AND logdate <=$2 limit 100", reqb.startDate, reqb.endDate);
+    query = db.query("select * from logs where logdate >=$1 AND logdate <=$2", reqb.startDate, reqb.endDate);
   }
   else if(reqb.startDate){
-    query = db.query("select * from logs where logdate >=$1 limit 100", reqb.startDate);
+    query = db.query("select * from logs where logdate >=$1", reqb.startDate);
   }
   else if(reqb.endDate){
-    query = db.query("select * from logs where logdate <=$1 limit 100", reqb.endDate);
+    query = db.query("select * from logs where logdate <=$1", reqb.endDate);
   }
 
   if(query){
-    query
-    .then(function(data){
-      res.send(data);
-    })
-    .catch(function(err){
-      res.send(err);
-    });
+    handleQuery(query, res);
   }
   else{
-    handleError(res, 'No startDate or endDate passed to logs/date')
+    fireError(res, 'No startDate or endDate passed to logs/date');
+  }
+});
+
+router.post('/logs/perPage', function(req, res){
+  let reqb = req.body;
+  let query;
+
+  
+  if(reqb.startDate && reqb.endDate){
+    query = db.query("select url from logs where logdate >=$1 AND logdate <=$2 GROUP BY url", reqb.startDate, reqb.endDate);
+  }
+  else if(reqb.startDate){
+    query = db.query("select url from logs where logdate >=$1 GROUP BY url", reqb.startDate);
+  }
+  else if(reqb.endDate){
+    query = db.query("select url from logs where logdate <=$1 GROUP BY url", reqb.endDate);
+  }
+
+  if(query){
+    handleQuery(query, res);
+  }
+  else{
+    fireError(res, 'No startDate or endDate passed to logs/date')
+  }
+});
+
+router.post('/logs/newErrors', function(req, res){
+  let reqb = req.body;
+  let query;
+
+  
+  if(reqb.startDate && reqb.endDate){
+    query = db.query("select  from logs where logdate >=$1 AND logdate <=$2 GROUP BY url", reqb.startDate, reqb.endDate);
+  }
+  else if(reqb.startDate){
+    console.log(reqb.startDate);
+    query = db.query(`
+      select distinct msg from logs where logdate > $1 AND msg NOT IN (
+        SELECT distinct msg from logs where logdate < $1
+      )
+    `, reqb.startDate);
+  }
+  else if(reqb.endDate){
+    query = db.query("select url from logs where logdate <=$1 GROUP BY url", reqb.endDate);
+  }
+  if(query){
+    handleQuery(query, res);
+  }
+  else{
+    fireError(res, 'No startDate or endDate passed to logs/date')
   }
 });
 

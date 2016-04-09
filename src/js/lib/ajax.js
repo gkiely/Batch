@@ -5,16 +5,24 @@ var api = '//localhost:8002/api/';
 
 
 /**
- * Patches the fetch api to return json
+ * Fetch wrapper
  */
 let fetchJson = function(url, options){
   url = api + url;
   return fetch(url, options)
   .then(checkStatus)
+  .catch(handleError)
 };
 
 /**
- * Add server error detection to fetch api
+ * Default error handler
+ */
+let handleError = function(e){
+  console.error(e);
+};
+
+/**
+ * Server error detection
  */
 let checkStatus = function(res){
   if (res.status >= 200 && res.status < 300) {
@@ -22,14 +30,15 @@ let checkStatus = function(res){
   }
   else{
     return res.json()
-    .then(function(data){
+    .then(data => {
       throw new Error(data.message);
     });
   }
 };
 
-
-
+/**
+ * Api
+ */
 let ajax = {
   delete: function(url, id){
     let options = {

@@ -62,7 +62,7 @@ gulp.task('server', function(){
 
   //== nodejs server (client/admin)
   stream.pipe(shell([
-    `nodemon --debug --ignore src/ --ignore dist/ --ignore test/ & 
+    `nodemon --debug --harmony_default_parameters --ignore src/ --ignore dist/ --ignore test/ & 
     node-inspector --preload false`
   ]));
 
@@ -159,7 +159,7 @@ gulp.task('sass', function(){
 var esconfig = require('./gulp/eslintrc.js');
 var eslintPassed;
 gulp.task('lint:js', function () {
-  return gulp.src(path.join(config.js.entry))
+  return gulp.src([path.join(config.js.entry), 'index.js'])
   // .pipe(gulpif( !prod, newer(path.join(config.copy.dist, 'base/js/') )))
   .pipe(eslint(esconfig))
   .pipe(eslint.format())
@@ -187,6 +187,7 @@ gulp.task('watch', function(){
   // gulp.watch([config.js.watch, config.js.devwatch]).on('change', function(e){
   // });
   gulp.watch(config.js.devwatch, ['js'])
+  gulp.watch('index.js', ['lint:js']);
   // gulp.watch(config.js.watch).on('change', livereload.changed);
   gulp.watch(config.html.watch, ['html']);
   gulp.watch(config.sass.watch, ['sass']);
