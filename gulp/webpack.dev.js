@@ -5,6 +5,8 @@ var webpack    = require('webpack');
 module.exports = {
   devtool: 'cheap-module-source-map',
   cache: true,
+  watch: true,
+  // debug: true,
   plugins:[
     new webpack.ProvidePlugin({
       Promise: 'exports?global.Promise!es6-promise',

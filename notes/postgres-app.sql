@@ -44,8 +44,7 @@
 -- select * from logs limit 10;
 
 -- select url, logdate, type from logs limit 10;
-
-select url, logdate, type from logs where logdate >= '2016-04-1';
+-- select url, logdate, type from logs where logdate >= '2016-04-1';
 
 
 -- drop table logs;

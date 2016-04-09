@@ -12,7 +12,7 @@ var config = {
     watch: join(src, 'html/**/*.html' )
   },
   js:{
-    input: join(src, 'js/App.js'),
+    entry: join(src, 'js/App.js'),
     devwatch: join(src, 'js/**/*.js'),
     watch: join(dist, 'js/**/*.js'),
     dist: join(dist, 'js')

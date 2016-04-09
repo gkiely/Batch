@@ -1,11 +1,12 @@
 // == Libraries
 import Component from './lib/react-autobind-component';
-import store from 'store';
+// import store from 'store';
+import moment from 'moment';
 
 // == App
 import Batch from './batch';
 import ajax from './lib/ajax';
-import clog from './lib/clog';
+// import clog from './lib/clog';
 
 
 class App extends Component {
@@ -40,13 +41,13 @@ class App extends Component {
         console.error(err);
       });
 
+      var startDate = moment().subtract(7, 'days').format();
 
-      ajax.post('logs/date', {startDate: ''})
+      ajax.post('logs/date', {startDate})
       .then(data => {
         if(data){
-          console.log(data);
           _this.setState({
-            errorsLastWeek: data
+            errorsThisWeek: data.length
           })
         }
       })
@@ -129,7 +130,7 @@ class App extends Component {
           <h3>Card Components</h3>
 
           <div className="component">
-            Errors this week: 52
+            Errors this week: {this.state.errorsThisWeek}
           </div>
 
           <div className="component">

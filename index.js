@@ -10,6 +10,7 @@ var dateTime   = new require('date-time');
 var cors       = require('cors');
 var bodyParser = require('body-parser');
 var express    = require('express');
+// var moment     = require('moment');
 var pgp        = require('pg-promise')();
 var publicIp   = require('public-ip');
 var uuid       = require('uuid');
@@ -105,6 +106,14 @@ let findExistingUser = function(id){
   return db.one('SELECT * FROM users where id=$1', id);
 };
 
+let handleError = function(res, msg, code){
+  if(!code){
+    code = 500;
+  }
+  res.status(code)
+  .send({message: msg})
+}
+
 // ==== End of Methods ====
 
 
@@ -126,7 +135,7 @@ app.use(bodyParser.urlencoded({
 =            Routes/api            =
 ==================================*/
 router.use(function(req, res, next){
-  console.log('Request received.');
+  console.log('node.js request received.');
   next();
 });
 
@@ -221,6 +230,7 @@ router.post('/logs/date', function(req, res){
   let reqb = req.body;
   let query;
 
+
   //-- Get logs by date range
   if(reqb.startDate && reqb.endDate){
     query = db.query("select * from logs where logdate >=$1 AND logdate <=$2 limit 100", reqb.startDate, reqb.endDate);
@@ -231,18 +241,19 @@ router.post('/logs/date', function(req, res){
   else if(reqb.endDate){
     query = db.query("select * from logs where logdate <=$1 limit 100", reqb.endDate);
   }
-  else{
-    res.status(500)
-    .send({message: 'No startDate or endDate passed to logs/date'})
-  }
 
-  // query
-  // .then(function(data){
-  //   res.send(data);
-  // })
-  // .catch(function(err){
-  //   res.send(err);
-  // });
+  if(query){
+    query
+    .then(function(data){
+      res.send(data);
+    })
+    .catch(function(err){
+      res.send(err);
+    });
+  }
+  else{
+    handleError(res, 'No startDate or endDate passed to logs/date')
+  }
 });
 
 
