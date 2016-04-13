@@ -1,5 +1,3 @@
-// import Batch from './batch';
-
 //-- Defaults
 var api = '//localhost:8002/api/';
 
@@ -37,6 +35,14 @@ let checkStatus = function(res){
 };
 
 /**
+ * Serialize object for get req
+ */
+let serialize = function(obj){
+  return '?' + Object.keys(obj).map(k => k + '=' + encodeURIComponent(obj[k])).join('&');
+}
+
+
+/**
  * Api
  */
 let ajax = {
@@ -46,8 +52,9 @@ let ajax = {
     };
     return fetchJson(url + '/' + id, options)
   },
-  get: function(url){
-    return fetchJson(url);
+  get: function(url, data){
+    var params = data ? serialize(data) : "";
+    return fetchJson(url + params);
   },
   post: function(url, data){
     let options = {

@@ -104,10 +104,15 @@ let findExistingUser = function(id){
   return db.one('SELECT * FROM users where id=$1', id);
 };
 
-let handleQuery = function(query, res){
+let handleQuery = function(res, query, count){
   return query
   .then(function(data){
-    res.send(data);
+    if(count){
+      res.send(data[0].count);
+    }
+    else{
+      res.send(data);
+    }
   })
   .catch(e => {
     fireError(res, e.message);
@@ -214,18 +219,8 @@ router.post('/logs', function(req, res){
  * Read logs
  */
 router.get('/logs', function(req, res){
-  let query;
-
-  //-- Get all logs
-  query = db.query("select * from logs limit 100");
-
-  query
-  .then(function(data){
-    res.send(data);
-  })
-  .catch(function(err){
-    res.send(err);
-  });
+  let query = db.query("select * from logs limit 100");
+  handleQuery(res, query);
 });
 
 
@@ -245,7 +240,7 @@ router.post('/logs/date', function(req, res){
   }
 
   if(query){
-    handleQuery(query, res);
+    handleQuery(res, query);
   }
   else{
     fireError(res, 'No startDate or endDate passed to logs/date');
@@ -268,7 +263,7 @@ router.post('/logs/perPage', function(req, res){
   }
 
   if(query){
-    handleQuery(query, res);
+    handleQuery(res, query);
   }
   else{
     fireError(res, 'No startDate or endDate passed to logs/date')
@@ -284,7 +279,6 @@ router.post('/logs/newErrors', function(req, res){
     query = db.query("select  from logs where logdate >=$1 AND logdate <=$2 GROUP BY url", reqb.startDate, reqb.endDate);
   }
   else if(reqb.startDate){
-    console.log(reqb.startDate);
     query = db.query(`
       select distinct msg from logs where logdate > $1 AND msg NOT IN (
         SELECT distinct msg from logs where logdate < $1
@@ -295,7 +289,7 @@ router.post('/logs/newErrors', function(req, res){
     query = db.query("select url from logs where logdate <=$1 GROUP BY url", reqb.endDate);
   }
   if(query){
-    handleQuery(query, res);
+    handleQuery(res, query);
   }
   else{
     fireError(res, 'No startDate or endDate passed to logs/date')
@@ -307,28 +301,17 @@ router.post('/logs/newErrors', function(req, res){
  * Read logs by id
  */
 router.get('/logs/:id', function(req, res){
-  db.query('select * from logs where id=$1', req.params.id)
-  .then(function(data){
-    res.send(data);
-  })
-  .catch(function(err){
-    res.send(err);
-  })
+  var query = db.query('select * from logs where id=$1', req.params.id)
+  handleQuery(res, query);
 });
 
 /**
  * Update log
  */
 router.put('/logs/:id', function(req, res){
-  // db.query('update logs set type="warn" where id=', req.params.id)
-  // .then(function(data){
-  //   res.send(data);
-  // })
-  // .catch(function(err){
-  //   res.send(err);
-  // })
+  // let query = db.query('update logs set type="warn" where id=', req.params.id)
+  // handleQuery(res, query)
 });
-
 
 
 
@@ -339,28 +322,47 @@ router.put('/logs/:id', function(req, res){
  * Delete log
  */
 router.delete('/logs/:id', function(req, res){
-  db.query('delete from logs where id=$1', req.params.id)
-  .then(function(data){
-    res.send(data);
-  })
-  .catch(function(err){
-    res.send(err);
-  })
+  let query = db.query('delete from logs where id=$1', req.params.id)
+  handleQuery(query);
 });
 
 router.delete('/logs', function(req, res){
-  db.query('delete from logs')
-  .then(data => {
-    res.send(data);
-  })
-  .catch(err => {
-    res.send(err);
-  })
+  let query = db.query('delete from logs')
+  handleQuery(query);
 });
 
 
+/**
+ * Get pageviews
+ * @return {array}
+ */
+router.get('/pageviews', function(req, res){
+  let reqb = req.query;
+  let query;
 
-// ==== End of Admin ====
+  if(reqb.startDate && reqb.endDate){
+    query = db.query(`select ${reqb.count ? 'count(url)' : 'url'} from pageviews where _date >=$1 AND _date <=$2`, reqb.startDate, reqb.endDate);
+  }
+  else if(reqb.startDate){
+    query = db.query(`select ${reqb.count ? 'count(url)' : 'url'} from pageviews where _date >=$1`, reqb.startDate);
+  }
+  else if(reqb.endDate){
+    query = db.query(`select ${reqb.count ? 'count(url)' : 'url'} from pageviews where _date <=$1`, reqb.endDate);
+  }
+  handleQuery(res, query, reqb.count);
+});
+
+/**
+ * Save Pageviews
+ */
+router.post('/pageviews', function(req, res){
+  var reqb = req.body;
+  var query = db.query('INSERT INTO pageviews (url) VALUES ($1)', [reqb.url])
+  handleQuery(res, query);
+});
+
+
+/*=====  End of Admin  ======*/
 
 
 

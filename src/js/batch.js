@@ -142,9 +142,12 @@ XMLHttpRequest.prototype.open = function(type, url) {
 
 
 
-// ===============
-// Init
-// ===============
+/*============================
+=            Init            =
+============================*/
+
+// Create/check user
+//-----------------------
 let user = Store.get('Batch');
 if(user && user.id){
   ajax.post('user', {id: user.id})
@@ -183,6 +186,22 @@ else{
     console.error(err);
   })
 }
+
+// Page view
+//-----------------------
+let url = window.location.href;
+ajax.post('pageviews', {url})
+.then(data =>{
+  if(data){
+    // data saved
+  }
+})
+.catch(e =>{
+  console.error('pagview did not save', e);
+})
+
+/*=====  End of Init  ======*/
+
 
 
 /**

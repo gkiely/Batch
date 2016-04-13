@@ -6,9 +6,8 @@ import moment from 'moment';
 // == App
 import Batch from './batch';
 import ajax from './lib/ajax';
+import toFixed from './lib/toFixed';
 // import clog from './lib/clog';
-
-
 
 class App extends Component {
     constructor(props){
@@ -62,11 +61,22 @@ class App extends Component {
       ajax.post('logs/newErrors', {startDate})
       .then(data =>{
         if(data){
-          console.log(data);
           _this.setState({
             newErrors: data.length
           })
         }
+      });
+
+      ajax.get('pageviews', {startDate, count: true})
+      .then(data => {
+        if(data){
+          _this.setState({
+            pageViews: data
+          })
+        }
+      })
+      .catch(function(e){
+        console.error('error GET request page views', e);
       })
     }
 
@@ -141,17 +151,18 @@ class App extends Component {
           
 
           <h3>Card Components</h3>
+          Date range is for the last week.
 
           <div className="component">
-            Errors (this week): {this.state.errorsThisWeek}
+            Errors: {this.state.errorsThisWeek}
           </div>
 
           <div className="component">
-            Errors per page (this week): {this.state.errorsThisWeek / this.state.errorsPerPage}
+            Errors per pageview: {toFixed(this.state.errorsThisWeek / this.state.pageViews)}
           </div>
 
           <div className="component">
-            New errors (this week): {this.state.newErrors}
+            New errors: {this.state.newErrors}
           </div>
 
           <h3>Graph component</h3>
