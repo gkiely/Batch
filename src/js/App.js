@@ -9,6 +9,9 @@ import ajax from './lib/ajax';
 import toFixed from './lib/toFixed';
 // import clog from './lib/clog';
 
+ajax.api('//localhost:8002/api/');
+
+
 class App extends Component {
     constructor(props){
       super(props);

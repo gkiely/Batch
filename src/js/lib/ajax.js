@@ -46,6 +46,9 @@ let serialize = function(obj){
  * Api
  */
 let ajax = {
+  api: function(url){
+    api = url;
+  },
   delete: function(url, id){
     let options = {
       method: 'delete'
