@@ -3,16 +3,14 @@ import Component from './lib/react-autobind-component';
 // import store from 'store';
 import moment from 'moment';
 
-// == App
+// == Admin
 import Batch from './batch';
 import ajax from './lib/ajax';
 import toFixed from './lib/toFixed';
 // import clog from './lib/clog';
 
-ajax.api('//localhost:8002/api/');
 
-
-class App extends Component {
+class Admin extends Component {
     constructor(props){
       super(props);
       this.state = {
@@ -137,27 +135,10 @@ class App extends Component {
       return(
         <div className="">
 
-          <div ref="clientSection">
-            <h1>Client Section</h1>
-            <input value={this.state.inputVal} ref="testInput" onChange={this.onChange} />
-            <button id="btn-1" onClick={this.error}>Error</button>
-            <button id="btn-2" onClick={this.warn}>Warn</button>
-            <button id="btn-3" onClick={this.log}>Log</button>
-
-            <a className="Client__signIn" href="?admin=true">Sign in</a>
-            <br/>
-            <hr style={{opacity: 0.3}} />
-          </div>
-
-
           <h1>Admin section</h1>
-          
-
           <h3>Card Components</h3>
-          Date range is for the last week.
-
           <div className="component">
-            Errors: {this.state.errorsThisWeek}
+            Total Errors last week: {this.state.errorsThisWeek}
           </div>
 
           <div className="component">
@@ -199,4 +180,4 @@ class App extends Component {
 
 
 
-ReactDOM.render(<App />, document.getElementById('App'));
+ReactDOM.render(<Admin />, document.getElementById('Admin'));

@@ -62,7 +62,7 @@ gulp.task('server', function(){
 
   //== nodejs server (client/admin)
   stream.pipe(shell([
-    `nodemon --debug --harmony_default_parameters --ignore src/ --ignore dist/ --ignore test/ & 
+    `nodemon --debug --ignore src/ --ignore dist/ --ignore test/ & 
     node-inspector --preload false`
   ]));
 
@@ -116,7 +116,7 @@ gulp.task('js', ['lint:js'], function(cb){
   compiler.run(function(err, stats){
     cb();
     livereload.changed(config.js.dist + '/bundle.js');
-  })
+  });
 });
 
 

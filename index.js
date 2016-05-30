@@ -42,7 +42,7 @@ var db          = pgp(cn);
 
 
 /*===============================
-=            Methods            =
+=            Helpers            =
 ===============================*/
 let getUserData = function(req){
   var ua = req.headers['user-agent'];
@@ -124,7 +124,7 @@ let fireError = function(res, msg, code = 500){
   .send({message: msg})
 };
 
-// ==== End of Methods ====
+// ==== End of Helpers ====
 
 
 
@@ -139,11 +139,22 @@ app.use(bodyParser.urlencoded({
 }));
 
 
+/*=============================
+=            Pages            =
+=============================*/
+// router.use('/client', function(res, req){
+  
+// });
 
 
-/*==================================
-=            Routes/api            =
-==================================*/
+/*=====  End of Pages  ======*/
+
+
+
+
+/*===========================
+=            API            =
+===========================*/
 router.use(function(req, res, next){
   console.log('node.js request received.');
   next();
@@ -219,7 +230,7 @@ router.post('/logs', function(req, res){
  * Read logs
  */
 router.get('/logs', function(req, res){
-  let query = db.query("select * from logs limit 100");
+  let query = db.query("select * from logs limit 5");
   handleQuery(res, query);
 });
 
@@ -312,6 +323,9 @@ router.put('/logs/:id', function(req, res){
   // let query = db.query('update logs set type="warn" where id=', req.params.id)
   // handleQuery(res, query)
 });
+
+/*=====  End of Api  ======*/
+
 
 
 

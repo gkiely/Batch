@@ -1,0 +1,15 @@
+@@include('partials/head.html', {
+  "title": "Starter Project"
+})
+
+<div id="clientSection">
+  <h1>Testing Section</h1>
+  <input value={this.state.inputVal} ref="testInput" onChange={this.onChange} />
+  <button id="btn-1" onClick={this.error}>Error</button>
+  <button id="btn-2" onClick={this.warn}>Warn</button>
+  <button id="btn-3" onClick={this.log}>Log</button>
+  <br/>
+  <hr style="opacity: 0.3"/>
+</div>
+
+@@include('partials/endofpage.html')
